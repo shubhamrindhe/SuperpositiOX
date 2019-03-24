@@ -23,16 +23,21 @@
 			width:100px;
 			height:100px;
 			
+			
 			display:flex-box;
 			justify-content:center;
 			align-items:center;
 			text-align:center;
 			
+			
 			cursor:pointer;
+		
 		}
 		td > svg{
 			padding:0 0;
 			margin:0 0 ;
+			
+			animation: zoom-in 0.1s linear;
 		}
 		td > svg:not (:root ) {
 			width:100%;
@@ -66,6 +71,15 @@
 		}
 		
 		
+		.centroid{
+			position:relative;
+			left:50%;
+			top:50%;
+			transform:translate(-50%,-50%);
+		}
+		
+		
+		
 		
 		@media only screen and (max-width: 700px) {
 			td{
@@ -85,7 +99,7 @@
 				height:70px;
 				transform:scale(0.7,0.7);
 				padding:0 0;
-				margin:0 0 ;
+				margin:0 0;
 			}
 			
 			
@@ -95,6 +109,100 @@
 			}
 		}
 		
+		@keyframes zoom-in{
+			0%{
+				opacity :0; 
+				transform:scale(0,0);
+				
+			}
+			100%{
+				opacity :1;
+				transform:scale(1,1);
+				
+			}
+		}
+		
+		@keyframes activate{
+			0%{
+				position:absolute;
+				top:-100%;
+				left:50%;
+				transform:translate(-50%,-50%);
+			}
+			100%{
+				position:absolute;
+				top:50%;
+				left:50%;
+				transform:translate(-50%,-50%);
+			}
+		}
+		
+		#endgame{
+			position:absolute;
+			top:-100%;
+			left:50%;
+			transform:translate(-50%,-50%);
+			width:300px;
+			height:300px;
+			
+			color:#fff;
+			display:flex-box;
+			justify-content:center;
+			align-items:center;
+			text-align:center;
+			
+			padding:20px;
+			
+			//border:2px solid red;
+			background:rgba(0,0,0,0.8);
+		}
+		
+		#endgame.active{
+			top:50%;
+			left:50%;
+			
+			
+			transform:translate(-50%,-50%);
+			
+			
+			animation: activate 0.5s linear;
+			transition:0.5s;
+		}
+		#endgame.not-active{
+			top:-100%;
+			left:50%;
+			
+			
+			transform:translate(-50%,-50%);
+			border:2px solid red;
+			
+			animation: activate 0.5s reverse linear;
+			transition:0.5s;
+		}
+		
+		
+		.pulse{
+				animation: animate 0.5s linear infinite;
+		}
+			
+		@keyframes animate{
+			0%{
+				box-shadow : 0 0 0 0 rgba(255,109,74,1);
+			}
+			40%{
+				box-shadow : 0 0 0 50px rgba(255,109,74,.5);
+			}
+			80%{
+				box-shadow : 0 0 0 50px rgba(255,109,74,.2);
+			}
+			100%{
+				box-shadow : 0 0 0 0 rgba(255,109,74,0);
+			}
+		}
+		
+		
+		
+		
         </style>
     </head>
     <body>
@@ -102,34 +210,37 @@
 		<div class="grid">
 			<table>
 				<tr>
-					<td id="0" class=""></td>
-					<td id="1" class="v"></td> 
-					<td id="2" class=""></td>
+					<td id="0" class=""  data="0"></td>
+					<td id="1" class="v" data="1"></td> 
+					<td id="2" class=""  data="2"></td>
 				</tr>
 				<tr>
-					<td id="3" class="h"></td>
-					<td id="4" class="h v"></td>
-					<td id="5" class="h"></td>
+					<td id="3" class="h"   data="3"></td>
+					<td id="4" class="h v" data="4"></td>
+					<td id="5" class="h"   data="5"></td>
 				</tr>
 				<tr>
-					<td id="6" class=""></td>
-					<td id="7" class="v"></td>
-					<td id="8" class=""></td>
+					<td id="6" class="" data="6"></td>
+					<td id="7" class="v" data="7"></td>
+					<td id="8" class="" data="8"></td>
 				</tr>
 			</table>
 		</div>
+		
+		
+		<div id="endgame" class="" onclick="restart()"></div>
 		
     </body>
 	
 	
 	<script>
 	
-	var X = '<svg width="80" height="80">\
+	var X = '<svg width="80" height="80" class="">\
 			<line x1="20" y1="20" x2="60" y2="60" style="stroke:blue;stroke-width:5" stroke-linecap="round"/>\
 			<line x1="20" y1="60" x2="60" y2="20" style="stroke:blue;stroke-width:5" stroke-linecap="round"/>\
 			</svg>';
 			
-	var O = '<svg width="80" height="80">\
+	var O = '<svg width="80" height="80" class="">\
 			<circle cx="40" cy="40" r="25" stroke="red" fill="none" stroke-width="5" />\
 			</svg>';
 			
@@ -173,11 +284,14 @@
 			DOM_grid[i].innerHTML = '';
 		}
 		grid = Array.from(Array(9).keys());
+		
+		turn = true;
 	}
 	
 	function addListeners(){
 		for(var i=0;i<size;++i){
 			DOM_grid[i].setAttribute('onclick','handleTurn(event,this)');
+			//DOM_grid[i].setAttribute('onclick','handleTurn(event,'+i+')');
 		}
 	}
 	
@@ -229,6 +343,11 @@
 	}
 	
 	function mark(id,player){
+		console.log(id);
+		//if(typeof id != 'number')
+			//id = parseInt(id);
+	
+	
 		DOM_grid[id].innerHTML = (player=='O'?O:X);
 		grid[id] = player;
 	}
@@ -327,18 +446,32 @@
 	
 	function endgame(player,combo){
 		if(player == computer){
-			alert("You Lost!");
+			//alert("You Lost!");
+			document.getElementById('endgame').innerHTML = 'You Lost!';
 		}else if(player == hooman){
-			alert("You Won!");
+			//alert("You Won!");
+			document.getElementById('endgame').innerHTML = 'You Won!';
 		}else{
-			alert("It's A Draw!");
+			//alert("It's A Draw!");
+			document.getElementById('endgame').innerHTML = 'Its a Draw!';
 		}
+		
+		document.getElementById('endgame').className = 'active';
+		
 		if(combo!=null)
 			for(var i=0;i<winning_combos[combo].length;++i){
 				//DOM_grid[winning_combos[combo][i]].style.background = 'red';
-				DOM_grid[winning_combos[combo][i]].style.background = 'linear-gradient(0deg,#6dd1ff,#20b7ff)';
+				//DOM_grid[winning_combos[combo][i]].style.background = 'linear-gradient(0deg,#6dd1ff,#20b7ff)';
+				//DOM_grid[winning_combos[combo][i]].style.boxShadow = 'inset 0 0 5px #fff';
+				//DOM_grid[winning_combos[combo][i]].className = 'pulse';
 				//DOM_grid[winning_combos[combo][i]].style.boxShadow='0 0 0 2px #353535, 0 0 0 2px #3e3e3e, inset 0 0 2px rgba(0,0,0,1),0 2px 2px rgba(0,0,0,.5),inset 0 0 2px rgba(0,0,0,.2)';
 			}
+	}
+	
+	function restart(){
+		//alert("restart");
+		document.getElementById('endgame').className = 'not-active';
+		reset();
 	}
 
 	</script>
