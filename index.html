@@ -160,15 +160,18 @@
 		@keyframes activate{
 			0%{
 				position:absolute;
-				top:-100%;
+				bottom:-20%;
 				left:50%;
-				transform:translate(-50%,-50%);
+				transform:translate(-50%,0);
+				
+				display:none;
 			}
 			100%{
 				position:absolute;
-				top:50%;
+				bottom:5%;
 				left:50%;
-				transform:translate(-50%,-50%);
+				transform:translate(-50%,0);
+				
 			}
 		}
 		
@@ -201,21 +204,21 @@
 			
 			
 			transform:translate(-50%,0);
+			display:flex-box;
 			
-			
-			/*animation: activate 0.5s linear;*/
-			transition:0.5s;
+			animation: activate 0.3s linear;
+			transition:0.3s;
 		}
 		#endgame.not-active{
-			bottom:-10%;
+			bottom:-20%;
 			left:50%;
 			
 			
 			transform:translate(-50%,0);
-			border:2px solid red;
 			
-			/*animation: activate 0.5s reverse linear;*/
-			transition:0.5s;
+			animation: activate 0.3s reverse linear;
+			transition:0.3s;
+			
 		}
 		
 		
@@ -266,7 +269,7 @@
 		</table>
 		
 		<svg id="winning_move" class="centroid" style="display:none;"></svg>
-		<div id="endgame" class="not-active" onclick="restart()"></div>
+		<div id="endgame" class="not-active" style="" onclick="restart()"></div>
     </body>
 	
 	
@@ -608,6 +611,7 @@
 				//DOM_grid[winning_combos[combo][i]].className = 'pulse';
 				//DOM_grid[winning_combos[combo][i]].style.boxShadow='0 0 0 2px #353535, 0 0 0 2px #3e3e3e, inset 0 0 2px rgba(0,0,0,1),0 2px 2px rgba(0,0,0,.5),inset 0 0 2px rgba(0,0,0,.2)';
 			}
+			
 			/*
 			document.getElementById('winning_move').width = rect.width;
 			document.getElementById('winning_move').height = rect.height;
@@ -615,6 +619,7 @@
 			document.getElementById('winning_move').top = rect.top;
 			document.getElementById('winning_move').left = rect.left;
 			*/
+			
 			//document.getElementById('winning_move').innerHTML = svg(combo);
 			
 			
