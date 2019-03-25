@@ -196,22 +196,22 @@
 		}
 		
 		#endgame.active{
-			top:90%;
+			bottom:5%;
 			left:50%;
 			
 			
-			transform:translate(-50%,-50%);
+			transform:translate(-50%,0);
 			
 			
 			/*animation: activate 0.5s linear;*/
 			transition:0.5s;
 		}
 		#endgame.not-active{
-			top:150%;
+			bottom:-10%;
 			left:50%;
 			
 			
-			transform:translate(-50%,-50%);
+			transform:translate(-50%,0);
 			border:2px solid red;
 			
 			/*animation: activate 0.5s reverse linear;*/
@@ -247,26 +247,26 @@
 	
 		<!--div class="grid"-->
 		<!--/div-->
-		<table id="board" class="centroid" style="">
-				<tr>
-					<td id="0" class="" ></td>
-					<td id="1" class="v"></td> 
-					<td id="2" class="" ></td>
-				</tr>
-				<tr>
-					<td id="3" class="h"  ></td>
-					<td id="4" class="h v"></td>
-					<td id="5" class="h"  ></td>
-				</tr>
-				<tr>
-					<td id="6" class="" ></td>
-					<td id="7" class="v"></td>
-					<td id="8" class=""></td>
-				</tr>
+		<table id="board" class="centroid" style="border:2px solid red;">
+			<tr>
+				<td id="0" class="" ></td>
+				<td id="1" class="v"></td> 
+				<td id="2" class="" ></td>
+			</tr>
+			<tr>
+				<td id="3" class="h"  ></td>
+				<td id="4" class="h v"></td>
+				<td id="5" class="h"  ></td>
+			</tr>
+			<tr>
+				<td id="6" class="" ></td>
+				<td id="7" class="v"></td>
+				<td id="8" class=""></td>
+			</tr>
 		</table>
 		
-		<svg id="winning_move" class="centroid" style="display:none;"></svg>
-		<div id="endgame" class="pulse not-active" onclick="restart()"></div>
+		<svg id="winning_move" class="centroid" style="display:none;border:2px solid red;"></svg>
+		<div id="endgame" class="not-active" onclick="restart()"></div>
     </body>
 	
 	
@@ -608,13 +608,13 @@
 				//DOM_grid[winning_combos[combo][i]].className = 'pulse';
 				//DOM_grid[winning_combos[combo][i]].style.boxShadow='0 0 0 2px #353535, 0 0 0 2px #3e3e3e, inset 0 0 2px rgba(0,0,0,1),0 2px 2px rgba(0,0,0,.5),inset 0 0 2px rgba(0,0,0,.2)';
 			}
-			
+			/*
 			document.getElementById('winning_move').width = rect.width;
 			document.getElementById('winning_move').height = rect.height;
 			
 			document.getElementById('winning_move').top = rect.top;
 			document.getElementById('winning_move').left = rect.left;
-			
+			*/
 			//document.getElementById('winning_move').innerHTML = svg(combo);
 			
 			
