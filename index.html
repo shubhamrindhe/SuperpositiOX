@@ -174,11 +174,13 @@
 		
 		#endgame{
 			position:absolute;
+			/*
 			top:-100%;
 			left:50%;
 			transform:translate(-50%,-50%);
-			width:300px;
-			height:300px;
+			*/
+			width:100px;
+			height:auto;
 			
 			color:#fff;
 			display:flex-box;
@@ -194,25 +196,25 @@
 		}
 		
 		#endgame.active{
-			top:50%;
+			top:90%;
 			left:50%;
 			
 			
 			transform:translate(-50%,-50%);
 			
 			
-			animation: activate 0.5s linear;
+			/*animation: activate 0.5s linear;*/
 			transition:0.5s;
 		}
 		#endgame.not-active{
-			top:-100%;
+			top:150%;
 			left:50%;
 			
 			
 			transform:translate(-50%,-50%);
 			border:2px solid red;
 			
-			animation: activate 0.5s reverse linear;
+			/*animation: activate 0.5s reverse linear;*/
 			transition:0.5s;
 		}
 		
@@ -244,7 +246,8 @@
     <body>
 	
 		<!--div class="grid"-->
-			<table id="board" class="centroid" style="">
+		<!--/div-->
+		<table id="board" class="centroid" style="">
 				<tr>
 					<td id="0" class="" ></td>
 					<td id="1" class="v"></td> 
@@ -260,11 +263,10 @@
 					<td id="7" class="v"></td>
 					<td id="8" class=""></td>
 				</tr>
-			</table>
-		<!--/div-->
+		</table>
 		
 		<svg id="winning_move" class="centroid" style="display:none;"></svg>
-		<div id="endgame" class="pulse" onclick="restart()"></div>
+		<div id="endgame" class="pulse not-active" onclick="restart()"></div>
     </body>
 	
 	
@@ -295,14 +297,14 @@
 		[2,4,6]
 	];
 	
-	var wins = [
-		{x1:0.1,y1:1/6,x2:0.9,y2:1/6},
-		{x1:0.1,y1:3/6,x2:0.9,y2:3/6},
-		{x1:0.1,y1:5/6,x2:0.9,y2:5/6},
+	var winning_combos_cords = [
+		{x1:0.05,y1:1/6,x2:0.95,y2:1/6},
+		{x1:0.05,y1:3/6,x2:0.95,y2:3/6},
+		{x1:0.05,y1:5/6,x2:0.95,y2:5/6},
 		
-		{x1:1/6,y1:0.1,x2:1/6,y2:0.9},
-		{x1:3/6,y1:0.1,x2:3/6,y2:0.9},
-		{x1:5/6,y1:0.1,x2:5/6,y2:0.9},
+		{x1:1/6,y1:0.05,x2:1/6,y2:0.95},
+		{x1:3/6,y1:0.05,x2:3/6,y2:0.95},
+		{x1:5/6,y1:0.05,x2:5/6,y2:0.95},
 		
 		{x1:0.05,y1:0.05,x2:0.95,y2:0.95},
 		{x1:0.95,y1:0.05,x2:0.05,y2:0.95}
@@ -326,7 +328,7 @@
 	
 	
 	function svg(i){
-		var win = wins[i];
+		var win = winning_combos_cords[i];
 		var w = document.getElementById('winning_move').getBoundingClientRect().width;
 	
 		return '<line x1="'+(win.x1*w)+'" y1="'+(win.y1*w)+'" x2="'+(win.x2*w)+'" y2="'+(win.y2*w)+'" style="stroke:rgba(0,0,0,0.5);stroke-width:20" stroke-linecap="round"/>';
