@@ -3,7 +3,6 @@
     <head>
         <title>TitanToe</title>
 		<meta charset="utf-8"/>
-		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 		<meta name="author" content="shubhamrindhe" id="author"/>
         <style>
 		body,*{
@@ -100,6 +99,9 @@
 			td{
 				width:80px;
 				height:80px;
+				
+				min-width:80px;
+				min-height:80px;
 				
 				display:flex-box;
 				justify-content:center;
@@ -235,8 +237,8 @@
 	
 		<svg id="winning_move" class="centroid" style="display:none;border:2px solid red;"></svg>
 	
-		<div class="grid">
-			<table id="board" class="" style="border:2px solid red;">
+		<!--div class="grid"-->
+			<table id="board" class="centroid" style="border:2px solid red;">
 				<tr>
 					<td id="0" class="" ></td>
 					<td id="1" class="v"></td> 
@@ -253,7 +255,7 @@
 					<td id="8" class=""></td>
 				</tr>
 			</table>
-		</div>
+		<!--/div-->
 		
 		<div id="endgame" class="" onclick="restart()"></div>
 		
