@@ -438,8 +438,8 @@
 	}
 	
 	function best_spot(){
-		//return minimax(grid,computer).index;
-		return minmax(grid,computer).index;
+		return minimax(grid,computer).index;
+		//return minmax(grid,computer).index;
 		//return minimax2(grid,true,{player : computer , rival : hooman}).index;
 	}
 	
@@ -533,7 +533,7 @@
 			return {score:-1};
 		if(checkWin(board,computer))
 			return {score:1};
-		if(checkTie())
+		if(avail_spots.length==0)
 			return {score:0};	
 			
 		var bestscore = (player==computer ? -Infinity : Infinity) ;
