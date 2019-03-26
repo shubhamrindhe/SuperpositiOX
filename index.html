@@ -17,8 +17,9 @@
 			/*
 			width:300px;
 			height:300px;
-			border-collapse:collapse;
 			*/
+			border-collapse:collapse;
+			
 		}
 		tr{
 			margin:0;
@@ -38,6 +39,16 @@
 			cursor:pointer;
 		
 		}
+		
+		/*
+		td:hover{
+			-moz-box-shadow:    inset 0 0 10px #000000;
+		   -webkit-box-shadow: inset 0 0 10px #000000;
+		   box-shadow:         inset 0 0 10px #000000;
+		
+		}
+		*/
+		
 		td > svg{
 			padding:0 0;
 			margin:0 0 ;
@@ -390,7 +401,7 @@
 			var end = checkWin(grid,hooman);
 			if(end == null){
 				if(!checkTie()){
-					var spot = bestSpot();
+					var spot = best_spot();
 					console.log(spot);
 					mark(spot,'O');
 					
@@ -426,17 +437,18 @@
 		grid[id] = player;
 	}
 	
-	function bestSpot(){
-		return minimax(grid,computer).index;
-		//return minimax(grid,true,{player : computer , rival : hooman}).index;
+	function best_spot(){
+		//return minimax(grid,computer).index;
+		return minmax(grid,computer).index;
+		//return minimax2(grid,true,{player : computer , rival : hooman}).index;
 	}
 	
-	function emptyCells(list){
+	function empty_cells(list){
 		return list.filter( s => typeof s == 'number' );
 	}
 	
 	function checkTie(){
-		if(emptyCells(grid).length==0)
+		if(empty_cells(grid).length==0)
 			return true;
 		else
 			return false;
@@ -462,7 +474,7 @@
 	
 	
 	function minimax2(board,player,markers,alpha=-Infinity,beta=Infinity){
-		var avail_spots = emptyCells(board);
+		var avail_spots = empty_cells(board);
 		
 		if(checkWin(board,hooman))
 			return {score:-1};
@@ -477,18 +489,12 @@
 		
 			var move = {};
 			move.index = board[avail_spots[i]];
-			board[avail_spots[i]] = ( player ? markers.player : markers.rival );
+			board[avail_spots[i]] = player ? markers.player : markers.rival ;
 			if(player){
-				var result = minimax(board,false,markers,alpha,beta);
+				var result = minimax2(board,false,markers,alpha,beta);
 				move.score = result.score;
-				
-				/*
-				var best_val = Math.min()
-				var best_val = Math.min(alpha)
-				*/
-				
 			}else{
-				var result = minimax(board,true,markers,alpha,beta);
+				var result = minimax2(board,true,markers,alpha,beta);
 				move.score = result.score;
 			}
 			board[avail_spots[i]] = move.index;
@@ -519,63 +525,103 @@
 		return moves[bestmove];
 	}
 	
-
 	
-	function minimax(board,player,alpha=-Infinity,beta=Infinity){
-		var avail_spots = emptyCells(board);
+	function minmax(board,player,alpha=-Infinity,beta=Infinity){
+		var avail_spots = empty_cells(board);
 		
 		if(checkWin(board,hooman))
 			return {score:-1};
 		if(checkWin(board,computer))
 			return {score:1};
-		if(avail_spots.length==0)
+		if(checkTie())
 			return {score:0};	
 			
-		var moves = [];
+		var bestscore = (player==computer ? -Infinity : Infinity) ;
+		var alpha_move;
 		for(var i=0;i<avail_spots.length;++i){
-		
 			var move = {};
 			move.index = board[avail_spots[i]];
 			board[avail_spots[i]] = player;
 			if(player==computer){
+				var result = minmax(board,hooman,alpha,beta);
+				move.score = result.score;
+				if(move.score > bestscore){
+					bestscore = move.score;
+					alpha_move = move;
+				}
+				
+				alpha = Math.max(alpha,bestscore);
+				if(beta<=alpha){
+					board[avail_spots[i]] = move.index;
+					break;
+				}
+			}else{
+				var result = minmax(board,computer,alpha,beta);
+				move.score = result.score;
+				if(move.score < bestscore){
+					bestscore = move.score;
+					alpha_move = move;
+				}
+				
+				beta = Math.min(alpha,bestscore);
+				if(beta<=alpha){
+					board[avail_spots[i]] = move.index;
+					break;
+				}
+			}
+			
+			board[avail_spots[i]] = move.index;
+		}
+		
+		return alpha_move;
+	}	
+
+	
+	function minimax(board,player,alpha=-Infinity,beta=Infinity){
+		
+		if(checkWin(board,hooman))
+			return {score:-1};
+		if(checkWin(board,computer))
+			return {score: 1};
+		if(checkTie())
+			return {score: 0};	
+		
+		var bestscore = (player==computer ? -Infinity : Infinity) ;
+		var alpha_move;
+		
+		empty_cells(board).forEach(function (cell,index) {
+			var move = {};
+			move.index = board[cell];
+			board[cell] = player;
+			if(player==computer){
 				var result = minimax(board,hooman,alpha,beta);
 				move.score = result.score;
-				
+				if(move.score > bestscore){
+					bestscore = move.score;
+					alpha_move = move;
+				}
 				/*
-				var best_val = Math.min()
-				var best_val = Math.min(alpha)
+				alpha = Math.max(alpha,bestscore);
+				if(beta<=alpha)
+					break;
 				*/
-				
 			}else{
 				var result = minimax(board,computer,alpha,beta);
 				move.score = result.score;
-			}
-			board[avail_spots[i]] = move.index;
-			moves.push(move);
-			
-			
-		}
-		var bestmove;
-		
-		if(player==computer){
-			var bestscore = -Infinity;
-			for(var i=0;i<moves.length;++i){
-				if(moves[i].score > bestscore){
-					bestscore = moves[i].score;
-					bestmove = i;
+				if(move.score < bestscore){
+					bestscore = move.score;
+					alpha_move = move;
 				}
+				/*
+				beta = Math.min(alpha,bestscore);
+				if(beta<=alpha)
+					break;
+				*/
 			}
-		}else{
-			var bestscore = Infinity;
-			for(var i=0;i<moves.length;++i){
-				if(moves[i].score < bestscore){
-					bestscore = moves[i].score;
-					bestmove = i;
-				}
-			}
+			board[cell] = move.index;
+		});
 		
-		}
-		return moves[bestmove];
+		return alpha_move;
 	}
 	
 
@@ -637,6 +683,7 @@
 		document.getElementById('winning_move').innerHTML = '';
 		reset();
 	}
+
 
 	</script>
 </html>
