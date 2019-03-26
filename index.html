@@ -311,6 +311,36 @@
 		[2,4,6]
 	];
 	
+	
+	
+	var Heuristic_Array = [
+		[     0,   -10,  -100, -1000 ],
+		[    10,     0,     0,     0 ],
+		[   100,     0,     0,     0 ],
+		[  1000,     0,     0,     0 ]
+	];
+	
+	
+	function evaluatePosition(board,player) {
+		var opponent = (player == 'X') ? 'O' : 'X', piece;
+		var players, others, t = 0, i, j;
+	  
+		for (i = 0; i < 8; i++)  {
+			players = others = 0;
+			for (j = 0; j < 3; j++)  {
+				piece = board[winning_combos[i][j]];
+				if (piece == player)
+					players++;
+				else if (piece == opponent)
+					others++;
+			}
+			t += Heuristic_Array[players][others];
+		}
+		return t;
+	}
+	
+	
+	
 	var winning_combos_cords = [
 		{x1:0.05,y1:1/6,x2:0.95,y2:1/6},
 		{x1:0.05,y1:3/6,x2:0.95,y2:3/6},
@@ -525,17 +555,20 @@
 		return moves[bestmove];
 	}
 	
-	
 	function minmax(board,player,alpha=-Infinity,beta=Infinity){
 		var avail_spots = empty_cells(board);
-		
+		/*
 		if(checkWin(board,hooman))
-			return {score:-1};
+			return {score:evaluatePosition(board,player)};
 		if(checkWin(board,computer))
-			return {score:1};
+			return {score:evaluatePosition(board,player)};
 		if(avail_spots.length==0)
-			return {score:0};	
-			
+			return {score:evaluatePosition(board,player)};	
+		*/
+		
+		if (avail_spots.length == 0) 
+			return {score:evaluatePosition(board,player)}; 
+		
 		var bestscore = (player==computer ? -Infinity : Infinity) ;
 		var alpha_move;
 		for(var i=0;i<avail_spots.length;++i){
@@ -578,13 +611,18 @@
 
 	
 	function minimax(board,player,alpha=-Infinity,beta=Infinity){
-		
+		/*
 		if(checkWin(board,hooman))
 			return {score:-1};
 		if(checkWin(board,computer))
 			return {score: 1};
 		if(checkTie())
 			return {score: 0};	
+		*/	
+		
+		if(empty_cells(board).length==0)
+			return { score:  evaluatePosition(board,player) };
+		
 		
 		var bestscore = (player==computer ? -Infinity : Infinity) ;
 		var alpha_move;
