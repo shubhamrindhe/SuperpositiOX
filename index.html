@@ -296,7 +296,7 @@
 			</svg>';
 			
 	var hooman = 'X';
-	var computer = 'O';
+	var puter = 'O';
 	
 	var winning_combos = [
 		[0,1,2],
@@ -311,6 +311,10 @@
 		[2,4,6]
 	];
 	
+	var size = 9;
+	var TicTacToe;
+	var grid;
+	var turn;
 	
 	
 	var Heuristic_Array = [
@@ -362,10 +366,7 @@
 		return '<line x1="'+(win.x1*w)+'" y1="'+(win.y1*w)+'" x2="'+(win.x2*w)+'" y2="'+(win.y2*w)+'" style="stroke:rgba(0,0,0,0.5);stroke-width:20" stroke-linecap="round"/>';
 	}
 	
-	var size = 9;
-	var DOM_grid;
-	var grid;
-	var turn;
+	
 	
 	window.onload = function(){
 		init();
@@ -373,17 +374,17 @@
 	}
 	
 	function init(){
-		DOM_grid = Array(size);
+		TicTacToe = Array(size);
 		grid = Array.from(Array(9).keys());
 		turn = true;
 		for(var i=0;i<size;++i){
-			DOM_grid[i] = document.getElementById(i);
+			TicTacToe[i] = document.getElementById(i);
 		}
 	}
 	
 	function reset(){
 		for(var i=0;i<size;++i){
-			DOM_grid[i].innerHTML = '';
+			TicTacToe[i].innerHTML = '';
 		}
 		grid = Array.from(Array(9).keys());
 		
@@ -392,14 +393,14 @@
 	
 	function addListeners(){
 		for(var i=0;i<size;++i){
-			DOM_grid[i].setAttribute('onclick','handleTurn(event,this)');
-			//DOM_grid[i].setAttribute('onclick','handleTurn(event,'+i+')');
+			TicTacToe[i].setAttribute('onclick','handleTurn(event,this)');
+			//TicTacToe[i].setAttribute('onclick','handleTurn(event,'+i+')');
 		}
 	}
 	
 	function destroy(){
 		for(var i=0;i<size;++i){
-			DOM_grid[i].setAttribute('onclick','handleTurn(event,this)');
+			TicTacToe[i].setAttribute('onclick','handleTurn(event,this)');
 		}
 	}
 	
@@ -409,9 +410,6 @@
 			var id =  DOM.id;
 			mark(id,hooman);
 			
-			//DOM.innerHTML = turn?O:X;
-			//grid[DOM.id] = hooman;
-			
 			var end = checkWin(grid,hooman);
 			if(end == null){
 				if(!checkTie()){
@@ -419,7 +417,7 @@
 					console.log(spot);
 					mark(spot,'O');
 					
-					end = checkWin(grid,computer);
+					end = checkWin(grid,puter);
 					
 					if(end == null){
 					
@@ -445,14 +443,13 @@
 	}
 	
 	function mark(cell_id,player){
-		DOM_grid[cell_id].innerHTML = (player=='O'?O:X);
+		TicTacToe[cell_id].innerHTML = (player=='O'?O:X);
 		grid[cell_id] = player;
 	}
 	
 	function best_spot(){
-		return minimax(grid,true,{player : computer , rival : hooman}).index;
-		//return minmax(grid,computer).index;
-		//return minimax2(grid,true,{player : computer , rival : hooman}).index;
+		return minimax(grid,true,{player : puter , rival : hooman}).index;
+		//return minmax(grid,puter).index;
 	}
 	
 	function empty_cells(list){
@@ -491,7 +488,7 @@
 		if(checkWin(board,hooman))
 			//return {score:evaluatePosition(board,player)};
 			return {score:-1000};
-		if(checkWin(board,computer))
+		if(checkWin(board,puter))
 			//return {score:evaluatePosition(board,player)};
 			return {score: 1000};
 		if(avail_spots.length==0)
@@ -506,13 +503,13 @@
 		if (avail_spots.length == 0) 
 			return {score:evaluatePosition(board,player)}; 
 		*/
-		var bestscore = (player==computer ? -Infinity : Infinity) ;
+		var bestscore = (player==puter ? -Infinity : Infinity) ;
 		var alpha_move;
 		for(var i=0;i<avail_spots.length;++i){
 			var move = {};
 			move.index = board[avail_spots[i]];
 			board[avail_spots[i]] = player;
-			if(player==computer){
+			if(player==puter){
 				var result = minmax(board,hooman,alpha,beta,level-1);
 				move.score = result.score;
 				if(move.score > bestscore){
@@ -526,7 +523,7 @@
 					break;
 				}
 			}else{
-				var result = minmax(board,computer,alpha,beta,level-1);
+				var result = minmax(board,puter,alpha,beta,level-1);
 				move.score = result.score;
 				if(move.score < bestscore){
 					bestscore = move.score;
@@ -617,57 +614,10 @@
 		
 	}
 	
-		
-	
-	function minimax2(board,player,mark){
-		var avail_spots = empty_cells(board);
-		
-		if(checkWin(board,mark.rival))
-			return {score:-1};
-		if(checkWin(board,mark.player))
-			return {score:1};
-		if(avail_spots.length==0)
-			return {score:0};	
-
-		var bestscore = (player ? -Infinity : Infinity) ;
-		var alpha_move;
-		
-		for(var i=0;i<avail_spots.length;++i){
-			var move = {};
-			move.index = board[avail_spots[i]];
-			board[avail_spots[i]] = player ? mark.player : mark.rival ;
-			if(player){
-				var result = minimax2(board,false,mark);
-				move.score = result.score;
-				
-				if(move.score > bestscore){
-					bestscore = move.score;
-					alpha_move = move;
-				}
-				
-			}else{
-				var result = minimax2(board,true,mark);
-				move.score = result.score;
-				
-				if(move.score < bestscore){
-					bestscore = move.score;
-					alpha_move = move;
-				}
-			}
-			board[avail_spots[i]] = move.index;
-		}
-		
-		return alpha_move;
-	}
-	
-
-
-
-	
 	
 	function endgame(player,combo){
 		
-		if(player == computer){
+		if(player == puter){
 			//alert("You Lost!");
 			document.getElementById('endgame').innerHTML = 'You Lost!';
 		}else if(player == hooman){
@@ -682,16 +632,16 @@
 		
 		document.getElementById('endgame').className = 'active';
 		
-		var rect = document.getElementById('board').getBoundingClientRect();
+		//var rect = document.getElementById('board').getBoundingClientRect();
 		
 		//console.log(rect);
 		if(combo!=null){
 			for(var i=0;i<winning_combos[combo].length;++i){
-				//DOM_grid[winning_combos[combo][i]].style.background = 'red';
-				//DOM_grid[winning_combos[combo][i]].style.background = 'linear-gradient(0deg,#6dd1ff,#20b7ff)';
-				//DOM_grid[winning_combos[combo][i]].style.boxShadow = 'inset 0 0 5px #fff';
-				//DOM_grid[winning_combos[combo][i]].className = 'pulse';
-				//DOM_grid[winning_combos[combo][i]].style.boxShadow='0 0 0 2px #353535, 0 0 0 2px #3e3e3e, inset 0 0 2px rgba(0,0,0,1),0 2px 2px rgba(0,0,0,.5),inset 0 0 2px rgba(0,0,0,.2)';
+				//TicTacToe[winning_combos[combo][i]].style.background = 'red';
+				//TicTacToe[winning_combos[combo][i]].style.background = 'linear-gradient(0deg,#6dd1ff,#20b7ff)';
+				//TicTacToe[winning_combos[combo][i]].style.boxShadow = 'inset 0 0 5px #fff';
+				//TicTacToe[winning_combos[combo][i]].className = 'pulse';
+				//TicTacToe[winning_combos[combo][i]].style.boxShadow='0 0 0 2px #353535, 0 0 0 2px #3e3e3e, inset 0 0 2px rgba(0,0,0,1),0 2px 2px rgba(0,0,0,.5),inset 0 0 2px rgba(0,0,0,.2)';
 			}
 			
 			/*
