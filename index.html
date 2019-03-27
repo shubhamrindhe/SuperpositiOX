@@ -104,11 +104,21 @@
 			width:300px;
 			height:300px;
 		}
+		#XO{
+			width:300px;
+			height:300px;
+		}
 		
 		
 		
 		
 		@media only screen and (max-width: 700px) {
+			#XO{
+				width:240px;
+				height:240px;
+				border:1px solid red;
+			}
+		
 			/*
 			table{
 				width:250px;
@@ -281,9 +291,9 @@
         </style>
     </head>
     <body>
-	
 		<!--div class="grid"-->
 		<!--/div-->
+		<svg id="XO" class="centroid"></svg>
 		<table id="board" class="centroid" style="">
 			<tr>
 				<td id="0" class=""  ></td>
@@ -301,8 +311,7 @@
 				<td id="8" class=""></td>
 			</tr>
 		</table>
-		
-		<svg id="winning_move" class="centroid" style="display:none;"></svg>
+		<svg id="winning_move" class="centroid" style="display:none;border:1px solid blue;"></svg>
 		<div id="start_btn" class="not-active" style="" onclick="restart()">Play Again</div>
 		<div id="endgame" class="not-active" style="" onclick="restart()"></div>
     </body>
@@ -377,6 +386,20 @@ var winning_combos_cords = [
 	{x1:0.05,y1:0.05,x2:0.95,y2:0.95},
 	{x1:0.95,y1:0.05,x2:0.05,y2:0.95}
 ];
+
+var grid_center_cords = [
+	{x:1/6,y:1/6},
+	{x:3/6,y:1/6},
+	{x:5/6,y:1/6},
+
+	{x:1/6,y:3/6},
+	{x:3/6,y:3/6},
+	{x:5/6,y:3/6},
+	
+	{x:1/6,y:5/6},
+	{x:3/6,y:5/6},
+	{x:5/6,y:5/6}
+];
 	
 	
 function create_svg(i){
@@ -385,7 +408,21 @@ function create_svg(i){
 
 	return '<line x1="'+(win.x1*w)+'" y1="'+(win.y1*w)+'" x2="'+(win.x2*w)+'" y2="'+(win.y2*w)+'" style="stroke:rgba(0,0,0,0.8);stroke-width:20" stroke-linecap="round"/>';
 }
-	
+
+function create_o(i){
+	var c = grid_center_cords[i];
+	var w = document.getElementById('XO').getBoundingClientRect().width;
+	return '<circle cx="'+c.x*w+'" cy="'+c.y*w+'" r="'+w/(1.5*size)+'" stroke="red" fill="none" stroke-width="5" />'
+}
+function create_x(i){
+	var c = grid_center_cords[i];
+	var w = document.getElementById('XO').getBoundingClientRect().width;
+	var s = w/(2*size);
+	return '\
+		<line x1="'+(c.x*w-s)+'" y1="'+(c.y*w-s)+'" x2="'+(c.x*w+s)+'" y2="'+(c.y*w+s)+'" style="stroke:blue;stroke-width:5" stroke-linecap="round"/>\
+		<line x1="'+(c.x*w-s)+'" y1="'+(c.y*w+s)+'" x2="'+(c.x*w+s)+'" y2="'+(c.y*w-s)+'" style="stroke:blue;stroke-width:5" stroke-linecap="round"/>\
+	';
+}	
 	
 	
 window.onload = function(){
@@ -424,9 +461,10 @@ function destroy(){
 }
 	
 function handleTurn(e,DOM){
-	if(turn && DOM.innerHTML==''){
+	var id =  DOM.id;
+	if(turn && (typeof grid[id] != 'string') /*DOM.innerHTML==''*/){
 		turn = false;
-		var id =  DOM.id;
+		
 		mark(id,hooman);
 			
 		var end = checkWin(grid,hooman);
@@ -454,7 +492,12 @@ function handleTurn(e,DOM){
 }
 
 function mark(cell_id,player){
-	TicTacToe[cell_id].innerHTML = (player=='O'?O:X);
+	//TicTacToe[cell_id].innerHTML = (player=='O'?O:X);
+	if(player=='X')
+		document.getElementById('XO').innerHTML += create_x(cell_id);
+	else
+		document.getElementById('XO').innerHTML += create_o(cell_id);
+	
 	grid[cell_id] = player;
 }	
 function best_spot(){
@@ -655,6 +698,7 @@ function restart(){
 	document.getElementById('start_btn').className = 'not-active';
 	document.getElementById('winning_move').style.display = 'none';
 	document.getElementById('winning_move').innerHTML = '';
+	document.getElementById('XO').innerHTML = '';
 	reset();
 }
 </script>
