@@ -11,6 +11,7 @@
 			margin:0;
 			padding:0;
 			overflow:hidden;
+			font-family:Courier New;
 		}
 		table{
 			margin:0;
@@ -100,11 +101,7 @@
 			transform:translate(-50%,-50%);
 		}
 		
-		#winning_move{
-			width:300px;
-			height:300px;
-		}
-		#XO{
+		#winning_move,#XO{
 			width:300px;
 			height:300px;
 		}
@@ -113,7 +110,7 @@
 		
 		
 		@media only screen and (max-width: 700px) {
-			#XO{
+			#XO,#winning_move{
 				width:240px;
 				height:240px;
 			}
@@ -141,10 +138,6 @@
 				cursor:pointer;
 			}
 			
-			#winning_move{
-				width:240px;
-				height:240px;
-			}
 			
 			td > svg{
 				width:70px;
@@ -196,7 +189,7 @@
 			padding:10px;
 			
 			border-radius:10px;
-			
+			font-size:small;
 			background:rgba(0,0,0,0.8);
 		}
 		
@@ -221,7 +214,7 @@
 		
 		
 		
-		#endgame{
+		#result{
 			position:absolute;
 			
 			width:auto;
@@ -235,12 +228,14 @@
 			
 			padding:10px;
 			
+			font-size:small;
+			
 			border-radius:10px;
 			
 			background:rgba(0,0,0,0.8);
 		}
 		
-		#endgame.active{
+		#result.active{
 			top:5%;
 			left:50%;
 			
@@ -250,7 +245,7 @@
 			
 			transition:0.3s;
 		}
-		#endgame.not-active{
+		#result.not-active{
 			top:-10%;
 			left:50%;
 			transform:translate(-50%,0);
@@ -311,8 +306,8 @@
 			</tr>
 		</table>
 		<svg id="winning_move" class="centroid" style="display:none;"></svg>
-		<div id="start_btn" class="not-active" style="" onclick="restart()">Play Again</div>
-		<div id="endgame" class="not-active" style="" onclick="restart()"></div>
+		<span id="start_btn" class="not-active" style="" onclick="restart()">Play Again</span>
+		<span id="result" class="not-active" style=""></span>
     </body>
 	
 	
@@ -470,7 +465,6 @@ function handleTurn(e,DOM){
 		if(end == null){
 			if(!checkTie()){
 				var spot = best_spot();
-				console.log(spot);
 				mark(spot,'O');			
 				end = checkWin(grid,puter);
 				if(end == null){
@@ -624,8 +618,9 @@ function minimax(board,player,mark){
 	if(player){
 		empty_cells(board).forEach(function (cell,index) {
 			var move = {};
-			move.index = board[cell];
-			board[cell] = player ? mark.player : mark.rival ;
+			//move.index = board[cell];
+			move.index = cell;
+			board[cell] = mark.player;
 			var result = minimax(board,false,mark);
 			move.score = result.score;
 			if(move.score > bestscore){
@@ -637,8 +632,9 @@ function minimax(board,player,mark){
 	}else{
 		empty_cells(board).forEach(function (cell,index) {
 			var move = {};
-			move.index = board[cell];
-			board[cell] = player ? mark.player : mark.rival ;			
+			//move.index = board[cell];
+			move.index = cell;
+			board[cell] = mark.rival;			
 			var result = minimax(board,true,mark);
 			move.score = result.score;
 			if(move.score < bestscore){
@@ -655,16 +651,16 @@ function minimax(board,player,mark){
 function endgame(player,combo){
 	if(player == puter){
 		//alert("You Lost!");
-		document.getElementById('endgame').innerHTML = 'You Lost!';
+		document.getElementById('result').innerHTML = 'You Lost!';
 	}else if(player == hooman){
 		//alert("You Won!");
-		document.getElementById('endgame').innerHTML = 'You Won!';
+		document.getElementById('result').innerHTML = 'You Won!';
 	}else{
 		//alert("It's A Draw!");
-		document.getElementById('endgame').innerHTML = 'Its a Draw!';
+		document.getElementById('result').innerHTML = 'Its a Draw!';
 	}	
 		
-	document.getElementById('endgame').className = 'active';
+	document.getElementById('result').className = 'active';
 	document.getElementById('start_btn').className = 'active';
 		
 	//var rect = document.getElementById('board').getBoundingClientRect();
@@ -693,7 +689,7 @@ function endgame(player,combo){
 
 function restart(){
 	//alert("restart");
-	document.getElementById('endgame').className = 'not-active';
+	document.getElementById('result').className = 'not-active';
 	document.getElementById('start_btn').className = 'not-active';
 	document.getElementById('winning_move').style.display = 'none';
 	document.getElementById('winning_move').innerHTML = '';
