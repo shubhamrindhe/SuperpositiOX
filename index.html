@@ -186,10 +186,12 @@
 			align-items:center;
 			text-align:center;
 			
+			font-weight:900;
+			
 			padding:10px;
 			
 			border-radius:10px;
-			font-size:small;
+			font-size:medium;
 			background:rgba(0,0,0,0.8);
 		}
 		
@@ -228,8 +230,8 @@
 			
 			padding:10px;
 			
-			font-size:small;
-			
+			font-size:medium;
+			font-weight:900;
 			border-radius:10px;
 			
 			background:rgba(0,0,0,0.8);
@@ -623,11 +625,12 @@ function minimax(board,player,mark){
 			board[cell] = mark.player;
 			var result = minimax(board,false,mark);
 			move.score = result.score;
+			board[cell] = cell;
 			if(move.score > bestscore){
 				bestscore = move.score;
 				alpha_move = move;
 			}
-			board[cell] = move.index;
+			
 		});
 	}else{
 		empty_cells(board).forEach(function (cell,index) {
@@ -637,14 +640,16 @@ function minimax(board,player,mark){
 			board[cell] = mark.rival;			
 			var result = minimax(board,true,mark);
 			move.score = result.score;
+			board[cell] = cell;
 			if(move.score < bestscore){
 				bestscore = move.score;
 				alpha_move = move;
 			}
-			board[cell] = move.index;
+			
 		});
 	}
 
+	
 	return alpha_move;	
 }
 		

@@ -61,54 +61,60 @@ def checkTie(_grid):
 
 def minimax(board,player,mark):	
 	if check_win(board,'X') != None :
-		return -1
+		return {'score':-1}
 	if check_win(board,'O') != None :
-		return  1
+		return {'score':1}
 	if checkTie(board) :
-		return  0	
+		return {'score':0}	
 
-	#bestscore = -Infinity if player else Infinity
+	bestscore = -Infinity if player else Infinity
+	'''
 	bestscore = None
 	if player :
 		bestscore = -Infinity
 	else:
 		bestscore = Infinity
-		
-	alpha_move = None
+	'''	
+	alpha_move = {'score':None,'index':None}
 		
 	if player :
 		#for index,cell in enumerate(empty_cells(board)) :
 		for cell in empty_cells(board) :
-			move =[None,None]
-			move[0] = cell
+			move = {'score':None,'index':None}
+			move['index'] = cell
 			board[cell] = mark[0]
 			result = minimax(board,False,mark)
-			move[1] = result
-			if(move[1] > bestscore):
-				bestscore = move[1]
-				alpha_move = move[0]
-			board[cell] = move[0]
+			move['score'] = result['score']
+			if(move['score'] > bestscore):
+				bestscore = move['score']
+				alpha_move = move
+			board[cell] = cell
 	else :
 		#for index,cell in enumerate(empty_cells(board)) :
 		for cell in empty_cells(board) :
-			move = [None,None]
-			move[0] = cell
+			move = {'score':None,'index':None}
+			move['index'] = cell
 			board[cell] = mark[1]
 			result = minimax(board,True,mark)
-			move[1] = result
-			if(move[1] < bestscore):
-				bestscore = move[1]
-				alpha_move = move[0]
-			board[cell] = move[0]
+			move['score'] = result['score']
+			if(move['score'] < bestscore):
+				bestscore = move['score']
+				alpha_move = move
+			board[cell] = cell
 	
 	return alpha_move
 		
 
 def mark_cell(_grid,cell,mark):
-	_grid[cell] = mark
+	if (type(_grid[cell]) is int) :
+		_grid[cell] = mark
+	else:
+		print('cell already taken!')
+		
 
 
 #mark_cell(grid,0,'X')
+
 
 #print(check_win(grid,'X'))
 #print(get_cells(grid,'X'))
@@ -150,7 +156,7 @@ def infinity_loop():
 			break
 		
 		
-		id = minimax(grid,True,['O','X'])
+		id = minimax(grid,True,['O','X'])['index']
 		print(id)
 		mark_cell(grid,id,'O')
 		
@@ -158,10 +164,4 @@ def infinity_loop():
 		
 	
 	
-infinity_loop()	
-
-
-
-
-
-
+infinity_loop()
