@@ -1,19 +1,19 @@
 from math import inf as Infinity
 
-winning_combos = [
-	[0,1,2],
-	[3,4,5],
-	[6,7,8],
-
-	[0,3,6],
-	[1,4,7],
-	[2,5,8],
-	
-	[0,4,8],
-	[2,4,6]
-]
-
 class TicTacToe :
+	winning_combinations = [
+		[0,1,2],
+		[3,4,5],
+		[6,7,8],
+
+		[0,3,6],
+		[1,4,7],
+		[2,5,8],
+		
+		[0,4,8],
+		[2,4,6]
+	]
+
 	def __init__(self):
 		self.board = list(range(9))
 	
@@ -35,12 +35,12 @@ class TicTacToe :
 	def check_win(self,player):
 		player_cells = self.get_cells(player)
 		gamewin = None
-		for combination in winning_combos :
+		for combination in TicTacToe.winning_combinations :
 			intersection = [ value for value in combination if value in player_cells ]
-			if intersection in winning_combos :
+			if intersection in TicTacToe.winning_combinations :
 				gamewin = [
-					winning_combos.index(intersection),
-					player
+					player,
+					TicTacToe.winning_combinations.index(intersection)
 				]
 				break
 		return gamewin
@@ -48,8 +48,55 @@ class TicTacToe :
 	def mark(self,cell,marker):
 		if type(self.board[cell]) is int :
 			self.board[cell] = marker
+			return True
 		else:
-			print('cell already taken!')
+			return False
+			
+	def render(self):
+		print( " %s | %s | %s  "% ( self.board[0] , self.board[1] , self.board[2] ) )
+		#print( "----+----+-----")
+		print( " %s | %s | %s  "% ( self.board[3] , self.board[4] , self.board[5] ) )
+		#print( "----+----+-----")
+		print( " %s | %s | %s  "% ( self.board[6] , self.board[7] , self.board[8] ) )
+		
+	def minimax(self,player,mark):
+		if self.check_win(mark[1]) != None :
+			return {'score':-1,'index':-1}
+		if self.check_win(mark[0]) != None :
+			return {'score': 1,'index':-1}
+		if self.checkTie() :
+			return {'score': 0,'index':-1}	
+		bestscore = -Infinity if player else Infinity
+		alpha_move = {'score':None,'index':None}
+			
+		if player :
+			for cell in self.empty_cells() :
+				move = {'score':None,'index':None}
+				move['index'] = cell
+				self.board[cell] = mark[0]
+				result = self.minimax(False,mark)
+				move['score'] = result['score']
+				self.board[cell] = cell
+				if(move['score'] > bestscore):
+					bestscore = move['score']
+					alpha_move = move
+		else :
+			for cell in self.empty_cells() :
+				move = {'score':None,'index':None}
+				move['index'] = cell
+				self.board[cell] = mark[1]
+				result = self.minimax(True,mark)
+				move['score'] = result['score']
+				self.board[cell] = cell
+				if(move['score'] < bestscore):
+					bestscore = move['score']
+					alpha_move = move
+		
+		return alpha_move
+		
+	def doctor_strange(self,player,mark):
+		return self.minimax(player,mark)['index']
+		
 
 
 		
@@ -58,10 +105,14 @@ print(t)
 print(t.board)
 
 t.mark(0,'X')
+'''
 t.mark(1,'X')
 t.mark(2,'X')
-		
+'''	
 print(t.board)		
 print(t.empty_cells())		
 print(t.checkTie())		
-print(t.check_win('X'))		
+print(t.check_win('X'))
+print(t.minimax(True,['O','X']))		
+print(t.doctor_strange(True,['O','X']))		
+t.render()
