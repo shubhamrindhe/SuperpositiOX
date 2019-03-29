@@ -1,8 +1,13 @@
+from math import inf as Infinity
+from os import system
+from sys import platform as _platform
+#import platform
+
 
 hooman = 'X'
 puter  = 'O'
 
-Infinity = float("inf")
+#Infinity = float("inf")
 
 winning_combos = [
 	[0,1,2],
@@ -124,9 +129,25 @@ def mark_cell(_grid,cell,mark):
 #print_grid(grid)
 
 
+def clear():
+	'''
+	#os_name = _platform.system.lower()
+	#print(os_name)
+	if 'windows' in os_name:
+		system('cls')
+	else:
+		system('clear')
+	'''	
+	if _platform == 'win32' or _platform == 'win64':
+		system('cls')
+	elif _platform == 'linux' or _platform == 'linux2':
+		system('clear')
+		
+
 
 def infinity_loop():
 	while(True):
+		
 		print_grid(grid);
 		if checkTie(grid) :
 			print("Tie!")
@@ -137,11 +158,20 @@ def infinity_loop():
 		if check_win(grid,'O')!=None:
 			print("computer Won!")
 			break	
-		'''
-		if  id in range(9) :
-			break
-		'''
+
+		
 		id = int(input("Enter cell id : "))
+		
+		if  not id in range(9) :
+			clear()
+			print("Enter Valid cell i.e. 0-9!")
+			continue
+			
+		if not type(grid[id]) is int : 
+			clear()
+			print("Cell Already teken!")
+			continue
+		
 		mark_cell(grid,id,'X')
 		
 		
@@ -160,8 +190,8 @@ def infinity_loop():
 		print(id)
 		mark_cell(grid,id,'O')
 		
-	print_grid(grid)	
+		clear()
 		
-	
+	print_grid(grid)
 	
 infinity_loop()
