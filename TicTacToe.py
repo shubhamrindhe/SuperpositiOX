@@ -52,12 +52,19 @@ class TicTacToe :
 		else:
 			return False
 			
+	def get_char(self,cell):
+		if type(self.board[cell]) is int :
+			return ' '
+		else:
+			return self.board[cell]
+		
+			
 	def render(self):
-		print( " %s | %s | %s  "% ( self.board[0] , self.board[1] , self.board[2] ) )
+		print( " %s | %s | %s  "% ( self.get_char(0) , self.get_char(1) , self.get_char(2) ) )
 		#print( "----+----+-----")
-		print( " %s | %s | %s  "% ( self.board[3] , self.board[4] , self.board[5] ) )
+		print( " %s | %s | %s  "% ( self.get_char(3) , self.get_char(4) , self.get_char(5) ) )
 		#print( "----+----+-----")
-		print( " %s | %s | %s  "% ( self.board[6] , self.board[7] , self.board[8] ) )
+		print( " %s | %s | %s  "% ( self.get_char(6) , self.get_char(7) , self.get_char(8) ) )
 		
 	def minimax(self,player,mark):
 		if self.check_win(mark[1]) != None :

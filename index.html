@@ -656,10 +656,13 @@ function minimax(board,player,mark){
 function endgame(player,combo){
 	if(player == puter){
 		//alert("You Lost!");
+		document.getElementById('result').innerHTML = 'You Lost!';
+		/*
 		if(Math.random()<0.1)
 			document.getElementById('result').innerHTML = '<span style="font-size:small;">There are no strings on me.</span>';
 		else	
 			document.getElementById('result').innerHTML = 'You Lost!';
+		*/	
 	}else if(player == hooman){
 		//alert("You Won!");
 		document.getElementById('result').innerHTML = 'You Won!';
