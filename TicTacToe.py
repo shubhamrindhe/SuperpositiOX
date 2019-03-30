@@ -1,18 +1,21 @@
 from math import inf as Infinity
 
 class TicTacToe :
-	winning_combinations = [
-		[0,1,2],
-		[3,4,5],
-		[6,7,8],
+	@staticmethod
+	def winning_combinations():
+		return [
+			[0,1,2],
+			[3,4,5],
+			[6,7,8],
 
-		[0,3,6],
-		[1,4,7],
-		[2,5,8],
-		
-		[0,4,8],
-		[2,4,6]
-	]
+			[0,3,6],
+			[1,4,7],
+			[2,5,8],
+			
+			[0,4,8],
+			[2,4,6]
+		]
+	
 
 	def __init__(self):
 		self.board = list(range(9))
@@ -26,7 +29,7 @@ class TicTacToe :
 	def get_cells(self,player):
 		return [ i for i,cell in enumerate(self.board) if cell == player ]
 		
-	def checkTie(self):
+	def check_tie(self):
 		if len(self.empty_cells()) == 0	:
 			return True
 		else:
@@ -35,12 +38,14 @@ class TicTacToe :
 	def check_win(self,player):
 		player_cells = self.get_cells(player)
 		gamewin = None
-		for combination in TicTacToe.winning_combinations :
+		combinations = TicTacToe.winning_combinations()
+		for index,combination in enumerate(combinations) :
 			intersection = [ value for value in combination if value in player_cells ]
-			if intersection in TicTacToe.winning_combinations :
+			if intersection in combinations :
 				gamewin = [
 					player,
-					TicTacToe.winning_combinations.index(intersection)
+					index
+					#combinations.index(intersection)
 				]
 				break
 		return gamewin
@@ -71,7 +76,7 @@ class TicTacToe :
 			return {'score':-1,'index':-1}
 		if self.check_win(mark[0]) != None :
 			return {'score': 1,'index':-1}
-		if self.checkTie() :
+		if self.check_tie() :
 			return {'score': 0,'index':-1}	
 		bestscore = -Infinity if player else Infinity
 		alpha_move = {'score':None,'index':None}
@@ -118,8 +123,9 @@ t.mark(2,'X')
 '''	
 print(t.board)		
 print(t.empty_cells())		
-print(t.checkTie())		
+print(t.check_tie())		
 print(t.check_win('X'))
 print(t.minimax(True,['O','X']))		
 print(t.doctor_strange(True,['O','X']))		
+print(TicTacToe.winning_combinations())		
 t.render()
