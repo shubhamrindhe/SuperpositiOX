@@ -8,10 +8,138 @@
 	<script src='./TicTacToe.js'></script>
 	
 	<style>
+		body,*{
+			background:none;
+			margin:0;
+			padding:0;
+			font-family:Courier New;
+		}
+		.centroid{
+			position:absolute;
+			left:50%;
+			top:50%;
+			transform:translate(-50%,-50%);
+			
+			width:auto;
+			height:auto;
+			
+			font-size:xx-small;
+			font-weight:900;
+			
+		}
+		
+		pre{
+			padding:20px;
+			display:inline-block;
+			
+			font-size:small;
+			font-weight:900;
+		}
 	</style>
 </head>
 <body>
+	<pre id='ttt'>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<!--pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre>
+	<pre>
+ X | O | X
+---+---+---
+ X | O | X
+---+---+---
+ X | O | X
+	</pre-->
+
 	<script>
+	function create_grid(list){
+		return 	' '+list[0]+' | '+list[1]+' | '+list[2]+'\n'+
+				'---+---+---\n'+
+				' '+list[3]+' | '+list[4]+' | '+list[5]+'\n'+
+				'---+---+---\n'+
+				' '+list[6]+' | '+list[7]+' | '+list[8]+'';
+	}
+	
+	function create_input(list,mark){
+		var input = [];
+		for(var i=0;i<list.length;++i){
+			if(list[i]==mark[0])
+				input.push(1);
+			else if(list[i]==mark[1])
+				input.push(-1);
+			else
+				input.push(0);
+		}
+		return input;
+	}
+	
+	document.getElementById('ttt').innerHTML = create_grid([0,1,2,3,4,5,6,7,8]);
+	
 	</script>
 </body>
 </html>
