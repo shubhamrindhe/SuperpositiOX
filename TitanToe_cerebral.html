@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TitanToe</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+		<meta name="author" content="shubhamrindhe" id="author"/>
+		<!--script src="./scripts/TicTacToe.js"></script-->
+		<script src="./scripts/minmax.js"></script>
+		<script src="../MachineLearning/libraries/cerebrum.js"></script>
+        <style>
+		body,*{
+			background:none;
+			margin:0;
+			padding:0;
+			font-family:Courier New;
+		}
+		table{
+			margin:0;
+			/*
+			width:300px;
+			height:300px;
+			*/
+			border-collapse:collapse;
+			
+		}
+		tr{
+			margin:0;
+			padding:0;
+		}
+		td{
+			width:100px;
+			height:100px;
+			display:flex-box;
+			justify-content:center;
+			align-items:center;
+			text-align:center;
+			cursor:pointer;
+		}
+		
+		/*
+		td:hover{
+			-moz-box-shadow:    inset 0 0 10px #000000;
+			-webkit-box-shadow: inset 0 0 10px #000000;
+			box-shadow:         inset 0 0 10px #000000;
+		}
+		*/
+		td > svg{
+			padding:auto;
+			margin:auto ;
+			/*
+			position:relative;
+			left:50%;
+			top:50%;
+			margin-right:-50%;
+			transform:translate(-50%,-50%);
+			*/
+			animation: zoom-in 0.1s linear;
+		}
+		td > svg:not (:root ) {
+			width:100%;
+			height: auto;
+		}
+		.grid{
+			display:flex;
+			justify-content:center;
+			align-items:center;
+			height:100vh;
+		}
+		.v{
+			border-left:2px solid black;
+			border-right:2px solid black;
+		}
+		.h{
+			border-top:2px solid black;
+			border-bottom:2px solid black;
+		}
+		.l{
+			border-left:2px solid black;
+		}
+		.r{
+			border-right:2px solid black;
+		}
+		.t{
+			border-top:2px solid black;
+		}
+		.b{
+			border-bottom:2px solid black;
+		}
+		.centroid{
+			position:absolute;
+			left:50%;
+			top:50%;
+			transform:translate(-50%,-50%);
+		}
+		.centroid2{
+			position:relative;
+			left:50%;
+			top:50%;
+			transform:translate(-50%,-50%);
+		}
+		#winning_move,#XO{
+			width:300px;
+			height:300px;
+		}
+		@media only screen and (max-width: 700px) {
+			#XO,#winning_move{
+				width:240px;
+				height:240px;
+			}
+		
+			/*
+			table{
+				width:250px;
+				height:250px;
+			}
+			*/
+			td{
+				width:80px;
+				height:80px;
+				
+				min-width:80px;
+				min-height:80px;
+				/*
+				display:flex-box;
+				justify-content:center;
+				align-items:center;
+				text-align:center;
+				*/
+				position:relative;
+				
+				cursor:pointer;
+			}
+			
+			
+			td > svg{
+				width:70px;
+				height:70px;
+				transform:scale(0.8,0.8);
+				padding:0 0;
+				margin:0 0;
+				/*
+				position:absolute;
+				left:50%;
+				top:50%;
+				margin-right:-50%;
+				transform:translate(-50%,-50%);
+				*/
+			}
+			
+			
+			td > svg:not (:root ) {
+				width:100%;
+				height: auto;
+			}
+		}
+		@keyframes zoom-in{
+			0%{
+				opacity :0; 
+				transform:scale(0,0);
+				
+			}
+			100%{
+				opacity :1;
+				transform:scale(1,1);
+				
+			}
+		}
+		#start_btn{
+			position:absolute;
+			
+			width:auto;
+			height:auto;
+			
+			color:#fff;
+			display:flex-box;
+			justify-content:center;
+			align-items:center;
+			text-align:center;
+			
+			font-weight:900;
+			
+			padding:10px;
+			
+			border-radius:10px;
+			font-size:medium;
+			background:rgba(0,0,0,0.8);
+		}
+		#start_btn.active{
+			bottom:5%;
+			left:50%;
+			transform:translate(-50%,0);
+			display:flex-box;
+			
+			transition:0.3s;
+		}
+		#start_btn.not-active{
+			bottom:-50%;
+			left:50%;
+			transform:translate(-50%,0);
+			display:none;
+			transition:0.3s;
+			
+		}
+		#result{
+			position:absolute;
+			
+			width:auto;
+			height:auto;
+			
+			color:#fff;
+			display:flex-box;
+			justify-content:center;
+			align-items:center;
+			text-align:center;
+			
+			padding:10px;
+			
+			font-size:medium;
+			font-weight:900;
+			border-radius:10px;
+			
+			background:rgba(0,0,0,0.8);
+		}
+		#result.active{
+			top:5%;
+			left:50%;
+			
+			
+			transform:translate(-50%,0);
+			display:flex-box;
+			
+			transition:0.3s;
+		}
+		#result.not-active{
+			top:-10%;
+			left:50%;
+			transform:translate(-50%,0);
+			display:none;
+			transition:0.3s;
+			
+		}
+		.pulse{
+			animation: animate 0.5s linear infinite;
+		}
+			
+		@keyframes animate{
+			0%{
+				box-shadow : 0 0 0 0 rgba(255,109,74,1);
+			}
+			40%{
+				box-shadow : 0 0 0 50px rgba(255,109,74,.5);
+			}
+			80%{
+				box-shadow : 0 0 0 50px rgba(255,109,74,.2);
+			}
+			100%{
+				box-shadow : 0 0 0 0 rgba(255,109,74,0);
+			}
+		}
+		
+		
+		
+		
+		
+		@media only screen and (min-width: 1050px) {
+			#info{
+				position : fixed;
+				width :50%;
+				top : 50%;
+				transform : translate(0,-50%);
+				z-index:100;
+				display:block;
+			}
+			
+			#population{
+				position : fixed;
+				width :50%;
+				left:50%;
+				top : 50%;
+				float : right;
+			}
+		}
+		
+        </style>
+    </head>
+    <body>
+		<!--div class="grid"-->
+		<!--/div-->
+		
+		<div id='info'>
+			<svg id="XO" class="centroid"></svg>
+			<table id="board" class="centroid" style="display:block;">
+				<tr>
+					<td id="0" class="" ></td>
+					<td id="1" class="v"></td> 
+					<td id="2" class="" ></td>
+				</tr>
+				<tr>
+					<td id="3" class="h"  ></td>
+					<td id="4" class="h v"></td>
+					<td id="5" class="h"  ></td>
+				</tr>
+				<tr>
+					<td id="6" class="" ></td>
+					<td id="7" class="v"></td>
+					<td id="8" class=""></td>
+				</tr>
+			</table>
+			<svg id="winning_move" class="centroid" style="display:none;"></svg>
+		</div>
+		
+		
+		<div id='population'>
+			<canvas id="titan_net" class="centroid" style="width:500px;height:400px;"></canvas>
+		</div>
+		
+		
+		
+		
+		<span id="start_btn" class="not-active" style="" onclick="restart()">Play Again</span>
+		<span id="result" class="not-active" style=""></span>
+		
+    </body>
+<script>
+
+var moves = [];
+	
+var X = '<svg width="80" height="80" class="">\
+		<line x1="20" y1="20" x2="60" y2="60" style="stroke:blue;stroke-width:5" stroke-linecap="round"/>\
+		<line x1="20" y1="60" x2="60" y2="20" style="stroke:blue;stroke-width:5" stroke-linecap="round"/>\
+		</svg>';	
+var O = '<svg width="80" height="80" class="">\
+		<circle cx="40" cy="40" r="25" stroke="red" fill="none" stroke-width="5" />\
+		</svg>';
+	
+var hooman = 'X';
+var puter = 'O';
+	
+var size = 9;
+var Tic_Tac_Toe;
+var grid;
+var turn;
+var winning_combos_cords = [
+	{x1:0.05,y1:1/6,x2:0.95,y2:1/6},
+	{x1:0.05,y1:3/6,x2:0.95,y2:3/6},
+	{x1:0.05,y1:5/6,x2:0.95,y2:5/6},
+
+	{x1:1/6,y1:0.05,x2:1/6,y2:0.95},
+	{x1:3/6,y1:0.05,x2:3/6,y2:0.95},
+	{x1:5/6,y1:0.05,x2:5/6,y2:0.95},
+
+	{x1:0.05,y1:0.05,x2:0.95,y2:0.95},
+	{x1:0.95,y1:0.05,x2:0.05,y2:0.95}
+];
+var grid_center_cords = [
+	{x:1/6,y:1/6},
+	{x:3/6,y:1/6},
+	{x:5/6,y:1/6},
+
+	{x:1/6,y:3/6},
+	{x:3/6,y:3/6},
+	{x:5/6,y:3/6},
+	
+	{x:1/6,y:5/6},
+	{x:3/6,y:5/6},
+	{x:5/6,y:5/6}
+];
+	
+	
+function create_svg(i){
+	var win = winning_combos_cords[i];
+	var w = document.getElementById('winning_move').getBoundingClientRect().width;
+
+	return '<line x1="'+(win.x1*w)+'" y1="'+(win.y1*w)+'" x2="'+(win.x2*w)+'" y2="'+(win.y2*w)+'" style="stroke:rgba(0,0,0,0.8);stroke-width:20" stroke-linecap="round"/>';
+}
+
+function create_o(i){
+	var c = grid_center_cords[i];
+	var w = document.getElementById('XO').getBoundingClientRect().width;
+	return '<circle cx="'+c.x*w+'" cy="'+c.y*w+'" r="'+w/(1.5*size)+'" stroke="red" fill="none" stroke-width="10" />'
+}
+function create_x(i){
+	var c = grid_center_cords[i];
+	var w = document.getElementById('XO').getBoundingClientRect().width;
+	var s = w/(2*size);
+	return '\
+		<line x1="'+(c.x*w-s)+'" y1="'+(c.y*w-s)+'" x2="'+(c.x*w+s)+'" y2="'+(c.y*w+s)+'" style="stroke:blue;stroke-width:10" stroke-linecap="round"/>\
+		<line x1="'+(c.x*w-s)+'" y1="'+(c.y*w+s)+'" x2="'+(c.x*w+s)+'" y2="'+(c.y*w-s)+'" style="stroke:blue;stroke-width:10" stroke-linecap="round"/>\
+	';
+}	
+	
+	
+window.onload = function(){
+	init();
+	addListeners();
+}
+	
+function init(){
+	Tic_Tac_Toe = Array(size);
+	grid = Array.from(Array(9).keys());
+	turn = true;
+	for(var i=0;i<size;++i){
+		Tic_Tac_Toe[i] = document.getElementById(i);
+	}
+	
+	for(var i =0;i<9;++i){
+		grid[i] = 'X';
+		best_spot();
+		grid[i] = i;
+	}
+}
+	
+function reset(){
+	for(var i=0;i<size;++i){
+		Tic_Tac_Toe[i].innerHTML = '';
+	}
+	grid = Array.from(Array(9).keys());
+	turn = true;
+}
+
+function addListeners(){
+	for(var i=0;i<size;++i){
+		Tic_Tac_Toe[i].setAttribute('onclick','handleTurn(event,this)');
+		//Tic_Tac_Toe[i].setAttribute('onclick','handleTurn(event,'+i+')');
+		//Tic_Tac_Toe[i].setAttribute('onmouseenter','render_titan(event,this)');
+	}
+}
+	
+function destroy(){
+	for(var i=0;i<size;++i){
+		Tic_Tac_Toe[i].setAttribute('onclick','handleTurn(event,this)');
+		
+	}
+}
+	
+function handleTurn(e,DOM){
+	var id =  DOM.id;
+	if(turn && (typeof grid[id] != 'string') /*DOM.innerHTML==''*/){
+		turn = false;
+		
+		mark(id,hooman);
+			
+		var end = check_win(grid,hooman);
+		if(end == null){
+			if(!check_tie(grid)){
+				var spot = best_spot();
+				mark(spot,'O');			
+				end = check_win(grid,puter);
+				if(end == null){
+
+				}else{
+					endgame(end.player,end.index);
+					turn = false;
+				}
+			}else{
+				endgame('-',null);
+			}
+			turn = true;
+		}else{
+			endgame(end.player,end.index);
+			turn = false;
+		}	
+	}			
+}
+
+function mark(cell_id,player){
+	//Tic_Tac_Toe[cell_id].innerHTML = (player=='O'?O:X);
+	if(player=='X')
+		document.getElementById('XO').innerHTML += create_x(cell_id);
+	else
+		document.getElementById('XO').innerHTML += create_o(cell_id);
+	
+	grid[cell_id] = player;
+}
+
+function best_spot(){
+	return minmax(grid,puter,{protagonist : puter , rival : hooman}).index;
+	//return minmax(grid,puter).index;
+}
+		
+function endgame(player,combo){
+	if(player == puter){
+		document.getElementById('result').innerHTML = 'You Lost!';	
+	}else if(player == hooman){
+		document.getElementById('result').innerHTML = 'You Won!';
+	}else{
+		document.getElementById('result').innerHTML = 'Its a Tie!';
+	}	
+		
+	document.getElementById('result').className = 'active';
+	document.getElementById('start_btn').className = 'active';
+		
+	if(combo!=null){
+		for(var i=0;i<TicTacToe_winning_combinations[combo].length;++i){
+		
+		}
+		document.getElementById('winning_move').style.display = 'block';
+		document.getElementById('winning_move').innerHTML = create_svg(combo);		
+	}	
+}
+
+function restart(){
+	document.getElementById('result').className = 'not-active';
+	document.getElementById('start_btn').className = 'not-active';
+	document.getElementById('winning_move').style.display = 'none';
+	document.getElementById('winning_move').innerHTML = '';
+	document.getElementById('XO').innerHTML = '';
+	reset();
+}
+
+
+</script>
+
+
+<script>
+var data;
+var states=[];
+var titan = new NeuralNetwork(9,[18,9]);
+titan.activations[0] = 'tanh';
+titan.activations[1] = 'softmax';
+titan.learningRate = 0.01;
+//titan.activations = ['relu','softmax'];
+
+
+
+
+function render_titan(e,DOM){
+	var id =  DOM.id;
+	
+	var temp_grid = grid.slice();
+	temp_grid[id] = 'X';
+	var inp = create_input(temp_grid,['O','X']);
+	//console.log(inp);
+	//alert();
+}
+
+function input(str){
+	var grid = str.split('');
+	var ttt=[];
+	grid.forEach((e,index)=>{
+		if(e=='_')
+			ttt.push(0);
+		if(e=='O')
+			ttt.push(1);
+		if(e=='X')
+			ttt.push(-1);
+	});
+	return ttt;
+}
+
+function getOut(label){
+	let list =  [0,1,2,3,4,5,6,7,8];
+	let outlist=[0,0,0,0,0,0,0,0,0];
+	outlist[list.indexOf(label)]=1;
+	return outlist;
+}
+
+
+function train(){
+	for(var i=0;i<500;++i){
+		var j=0;
+		for(ttt in data){
+			++j;
+			var t1 = new Date();
+			let out = getOut(data[ttt].index);
+			let inp = input(ttt);
+			titan.learn(inp,out);
+			var dt = new Date() - t1;
+			console.clear();
+			console.log('NN time: '+dt+'ms');
+			console.log(''+i+'/'+j);
+		}
+	}
+	
+				
+}
+
+var err=[];
+function test(){
+	var score = 0;
+	var i=0;
+	
+	
+	for(ttt in data){
+		
+		var t1 = new Date();
+		var inp = input(ttt);
+		
+		//var output = titan.feedforward(inp);
+		//var max = output.reduce(function(p,c) { return p>c ? p : c; });
+		
+		var guess = titan.predict(inp);
+		//var guess = output.indexOf(max);
+				
+		if(guess==data[ttt].index)
+			++score;
+		else{
+			err.push(
+				{
+					input : ttt,
+					output : data[ttt].index,
+					guess : guess
+				}
+			);
+		}
+				
+		//console.clear();
+		console.log(guess+"\t"+data[ttt].index)
+		console.log("feeding image"+i+"\t Accuracy : "+score/(i+1)*100 +"%\t"+score+"/"+(i+1));
+		//var dt = new Date() - t1; console.log('NN time: '+dt+'ms');
+		++i;
+	}
+			
+}
+
+window.onload = function(){
+	//data = loadJSON('./datasets/gental_net.json');
+	data = loadJSON('./datasets/beginer.json');
+	
+	for (state in data){
+		states.push(state);
+	}
+
+	
+
+	train();
+	test();
+	titan.blueprint(document.getElementById('titan_net'),{renderNodes:false});
+};
+
+</script>
+
+</html>

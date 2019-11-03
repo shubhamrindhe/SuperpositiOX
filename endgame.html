@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EndGame</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+		<meta name="author" content="shubhamrindhe" id="author"/>
+		<script src="../MachineLearning/libraries/cerebrum.js"></script>
+		<script src="./scripts/minmax.js"></script>
+		<style>
+        </style>
+    </head>
+    <body>
+		
+    </body>
+<script>
+
+var TicTacToe_winning_combinations = [
+	[0,1,2],
+	[3,4,5],
+	[6,7,8],
+			
+	[0,3,6],
+	[1,4,7],
+	[2,5,8],	
+		
+	[0,4,8],
+	[2,4,6]
+];
+
+function empty_cells(_){
+	return _.filter( s => typeof s == 'number' );
+}
+	
+function checkTie(_){
+	if((empty_cells(_).length)==0)
+		return true;
+	else
+		return false;	
+}
+	
+function checkWin(board,player){
+	let plays = board.reduce( (a,e,i) => ( (e === player) ? a.concat(i) : a ) , [] );			
+	let gamewin = null;
+
+	for(let [index,combo] of TicTacToe_winning_combinations.entries()){
+		if( combo.every(elem=>plays.indexOf(elem)>-1) ){
+			gamewin = {
+				index : index,
+				player : player
+			};
+			break;
+		}	
+	}
+	return gamewin;
+}	
+
+function toe2String(grid){
+	var str = '';
+	grid.forEach(e=>{
+		if(e=='X')
+			str+='X';
+		if(e=='O')
+			str+='O';
+		if(typeof e=='number')
+			str+='_';
+		//typeof e=='number'?str+='_':str+=e;
+	});
+	return str;
+}
+function string2toe(str){
+	var grid = str.split('');
+	var ttt=[];
+	grid.forEach((e,index)=>{
+		if(e=='_')
+			ttt.push(index);
+		if(e=='O')
+			ttt.push('O');
+		if(e=='X')
+			ttt.push('X');
+	});
+	return ttt;
+}
+
+var possible_moves_all={};
+var possible_moves_X={};
+var possible_moves_O={};
+var possible_moves_str = [];
+
+function minimax(board,player,mark,bool){
+	var _ = board;//board.slice();
+	if(checkWin(_,mark.rival)){
+		return {score:-1};
+	}	
+	if(checkWin(_,mark.player)){
+		return {score: 1};
+	}	
+	if(checkTie(_)){
+		return {score: 0};	
+	}
+	var bestscore = ( player ? -Infinity : Infinity ) ;
+	var alpha_move;	
+	if(player){
+		var move = {};
+		var best_spot = minmax(_,mark.player,{protagonist:mark.player,rival:mark.rival});
+		alpha_move = best_spot;
+		
+		var str_grid = toe2String(_);
+		possible_moves_str.push(str_grid);
+		possible_moves_all[str_grid]=best_spot;
+		
+		_[best_spot.index] = mark.player;
+		minimax(_,false,mark,bool);
+		_[best_spot.index] = best_spot.index;
+		
+		/*
+		_[best_spot.index] = mark.player;
+		minimax(_,false,mark,bool);
+		move.score = best_spot.score;
+		move.index = best_spot.index;
+		_[best_spot.index] = best_spot.index;
+		if(move.score > bestscore){
+			bestscore = move.score;
+			alpha_move = move;
+		}
+		*/
+	
+		/*
+		empty_cells(_).forEach(function (cell,index,list) {
+			var move = {};
+			//move.index = board[cell];
+			move.index = cell;
+			_[cell] = mark.player;
+			var result = minimax(_,false,mark,bool);
+			move.score = result.score;
+			
+			
+			var str_grid = toe2String(_);
+			possible_moves_str.push(str_grid);
+			possible_moves_all[str_grid]=_;
+			possible_moves_O[str_grid]=_ ;
+			
+			
+			_[cell] = cell;
+			if(move.score > bestscore){
+				bestscore = move.score;
+				alpha_move = move;
+			}
+			
+			
+			var str_grid = toe2String(_);
+			possible_moves_str.push(str_grid);
+			possible_moves_all[str_grid]=_;
+			possible_moves_O[str_grid]=_ ;
+			
+		});
+		*/
+	}else{
+		empty_cells(_).forEach(function (cell,index,list) {
+			var move = {};
+			
+			move.index = cell;
+			_[cell] = mark.rival;			
+			var result = minimax(_,true,mark,bool);
+			move.score = result.score;
+			
+			_[cell] = cell;
+			if(move.score < bestscore){
+				bestscore = move.score;
+				alpha_move = move;
+			}
+			
+		});
+	}	
+	return alpha_move;	
+}
+
+
+
+var endgame = {};
+
+
+console.log(minimax([0,1,2,3,4,5,6,7,8],false,{ player : 'O' , rival : 'X' }));
+//console.log(minimax([0,1,2,3,4,5,6,7,8],true,{ player : 'O' , rival : 'X' }));
+
+/*
+console.log(minimax(['O',1,2,3,4,5,6,7,8],false,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,'O',2,3,4,5,6,7,8],false,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,'O',3,4,5,6,7,8],false,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,'O',4,5,6,7,8],false,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,'O',5,6,7,8],false,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,4,'O',6,7,8],false,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,4,5,'O',7,8],false,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,4,5,6,'O',8],false,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,4,5,6,7,'O'],false,{ player : 'O' , rival : 'X' }));
+
+
+console.log(minimax(['X',1,2,3,4,5,6,7,8],true,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,'X',2,3,4,5,6,7,8],true,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,'X',3,4,5,6,7,8],true,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,'X',4,5,6,7,8],true,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,'X',5,6,7,8],true,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,4,'X',6,7,8],true,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,4,5,'X',7,8],true,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,4,5,6,'X',8],true,{ player : 'O' , rival : 'X' }));
+console.log(minimax([0,1,2,3,4,5,6,7,'X'],true,{ player : 'O' , rival : 'X' }));
+*/
+
+/*
+console.log(minmax(['X',1,2,3,4,5,6,7,8],'O',{ protagonist : 'O' , rival : 'X' }));
+console.log(minmax([0,'X',2,3,4,5,6,7,8],'O',{ protagonist : 'O' , rival : 'X' }));
+console.log(minmax([0,1,'X',3,4,5,6,7,8],'O',{ protagonist : 'O' , rival : 'X' }));
+console.log(minmax([0,1,2,'X',4,5,6,7,8],'O',{ protagonist : 'O' , rival : 'X' }));
+console.log(minmax([0,1,2,3,'X',5,6,7,8],'O',{ protagonist : 'O' , rival : 'X' }));
+console.log(minmax([0,1,2,3,4,'X',6,7,8],'O',{ protagonist : 'O' , rival : 'X' }));
+console.log(minmax([0,1,2,3,4,5,'X',7,8],'O',{ protagonist : 'O' , rival : 'X' }));
+console.log(minmax([0,1,2,3,4,5,6,'X',8],'O',{ protagonist : 'O' , rival : 'X' }));
+console.log(minmax([0,1,2,3,4,5,6,7,'X'],'O',{ protagonist : 'O' , rival : 'X' }));
+*/
+
+
+max={};
+var list_all = [];
+for (move in possible_moves_all){
+	//console.log(possible_moves[move]);
+	list_all.push(move);
+	//max[move] = minimax(string2toe(move),possible_moves[move],{ player : 'O' , rival : 'X' }).index;
+	//document.body.innerHTML=(i+"/"+list.length);
+}
+var list_O = [];
+for (move in possible_moves_O){
+	//console.log(possible_moves[move]);
+	list_O.push(move);
+	//max[move] = minimax(string2toe(move),possible_moves[move],{ player : 'O' , rival : 'X' }).index;
+	//document.body.innerHTML=(i+"/"+list.length);
+}
+var list_X = [];
+for (move in possible_moves_X){
+	//console.log(possible_moves[move]);
+	list_X.push(move);
+	//max[move] = minimax(string2toe(move),possible_moves[move],{ player : 'O' , rival : 'X' }).index;
+	//document.body.innerHTML=(i+"/"+list.length);
+}
+
+
+/*
+for(var i=0;i<list.length;++i){
+	var str = list[i];
+	//console.clear();
+	max[str] = minimax(string2toe(str),false,{ player : 'O' , rival : 'X' }).index;
+	document.body.innerHTML=(i+"/"+list.length);
+}
+*/
+
+//console.log(list.length);
+//console.log(possible_moves_str.length);
+
+
+</script>
+
+
+
+
+</html>

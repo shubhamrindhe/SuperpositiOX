@@ -178,166 +178,38 @@ class TicTacToe {
 			}
 		}
 		return alpha_move;	
+	}	
+}
+
+
+function create_grid(list){
+	return 	' '+player([0])+' | '+player([1])+' | '+player([2])+' \n'+
+			'---+---+---\n'+
+			' '+player([3])+' | '+player([4])+' | '+player([5])+' \n'+
+			'---+---+---\n'+
+			' '+player([6])+' | '+player([7])+' | '+player([8])+' ';
+}
+	
+function player(cell){
+	return typeof cell == "string" ? cell : " " ;
+}
+	
+function create_input(list,mark){
+	var input = [];
+	for(var i=0;i<list.length;++i){
+		if(list[i]==mark[0])
+			input.push(1);
+		else if(list[i]==mark[1])
+			input.push(-1);
+		else
+			input.push(0);
 	}
-	
-	
-	
-	
+	return input;
 }
 
 
-function empty_cells(list){
-	return list.filter( s => typeof s == 'number' );
-}
-	
-function checkTie(){
-	if(empty_cells(grid).length==0)
-		return true;
-	else
-		return false;	
-}
-	
-function checkWin(board,player){
-	let plays = board.reduce( (a,e,i) => ( (e === player) ? a.concat(i) : a ) , [] );			
-	let gamewin = null;
-
-	for(let [index,combo] of TicTacToe.winning_combinations().entries()){
-		if( combo.every(elem=>plays.indexOf(elem)>-1) ){
-			gamewin = {
-				index : index,
-				player : player
-			};
-			break;
-		}	
-	}
-	return gamewin;
-}	
-
-	
-function minimax(board,player,mark){		
-	if(checkWin(board,mark.rival))
-		return {score:-1};
-	if(checkWin(board,mark.player))
-		return {score: 1};
-	if(checkTie())
-		return {score: 0};	
-
-	var bestscore = ( player ? -Infinity : Infinity ) ;
-	var alpha_move;	
-	/*
-	empty_cells(board).forEach(function (cell,index) {
-		var move = {};
-		move.index = board[cell];
-		board[cell] = player ? mark.player : mark.rival ;
-		if(player){
-			var result = minimax(board,false,mark);
-			move.score = result.score;
-			if(move.score > bestscore){
-				bestscore = move.score;
-				alpha_move = move;
-			}
-		}else{
-			var result = minimax(board,true,mark);
-			move.score = result.score;
-			if(move.score < bestscore){
-				bestscore = move.score;
-				alpha_move = move;
-			}
-		}
-		board[cell] = move.index;
-	});
-	*/
-
-	if(player){
-		empty_cells(board).forEach(function (cell,index) {
-			var move = {};
-			//move.index = board[cell];
-			move.index = cell;
-			board[cell] = mark.player;
-			var result = minimax(board,false,mark);
-			move.score = result.score;
-			board[cell] = cell;
-			if(move.score > bestscore){
-				bestscore = move.score;
-				alpha_move = move;
-			}
-			
-		});
-	}else{
-		empty_cells(board).forEach(function (cell,index) {
-			var move = {};
-			//move.index = board[cell];
-			move.index = cell;
-			board[cell] = mark.rival;			
-			var result = minimax(board,true,mark);
-			move.score = result.score;
-			board[cell] = cell;
-			if(move.score < bestscore){
-				bestscore = move.score;
-				alpha_move = move;
-			}
-			
-		});
-	}
-
-	
-	return alpha_move;	
-}
 
 
-function minmax(board,player,alpha=-Infinity,beta=Infinity,level=2){
-	var avail_spots = empty_cells(board);
-	if(checkWin(board,hooman))
-		//return {score:evaluatePosition(board,player)};
-		return {score:-1000};
-	if(checkWin(board,puter))
-		//return {score:evaluatePosition(board,player)};
-		return {score: 1000};
-	if(avail_spots.length==0)
-		//return {score:evaluatePosition(board,player)};	
-		return {score:0};	
-	if (level == 0) 
-		//return {score:evaluatePosition(board,player)}; 	
-		return {score:evaluatePosition(board,player)};
-	/*
-	if (avail_spots.length == 0) 
-		return {score:evaluatePosition(board,player)}; 
-	*/
-	var bestscore = (player==puter ? -Infinity : Infinity) ;
-	var alpha_move;
-	for(var i=0;i<avail_spots.length;++i){
-		var move = {};
-		move.index = board[avail_spots[i]];
-		board[avail_spots[i]] = player;
-		if(player==puter){
-			var result = minmax(board,hooman,alpha,beta,level-1);
-			move.score = result.score;
-			if(move.score > bestscore){
-				bestscore = move.score;
-				alpha_move = move;
-			}
-			alpha = Math.max(alpha,bestscore);
-			if(beta<=alpha){
-				board[avail_spots[i]] = move.index;
-				break;
-			}
-		}else{
-			var result = minmax(board,puter,alpha,beta,level-1);
-			move.score = result.score;
-			if(move.score < bestscore){
-				bestscore = move.score;
-				alpha_move = move;
-			}
-			beta = Math.min(alpha,bestscore);
-			if(beta<=alpha){
-				board[avail_spots[i]] = move.index;
-				break;
-			}
-		}
-		board[avail_spots[i]] = move.index;
-	}
-	return alpha_move;
-}
 
 
 

@@ -30,9 +30,9 @@ def new_grid():
 grid = new_grid()
 
 def print_grid(grid):
-	print(grid[0],end="|"),print(grid[1],end="|"),print(grid[2])
-	print(grid[3],end="|"),print(grid[4],end="|"),print(grid[5])
-	print(grid[6],end="|"),print(grid[7],end="|"),print(grid[8])
+	print("\t",end="\t"),print(grid[0],end=" | "),print(grid[1],end=" | "),print(grid[2])
+	print("\t",end="\t"),print(grid[3],end=" | "),print(grid[4],end=" | "),print(grid[5])
+	print("\t",end="\t"),print(grid[6],end=" | "),print(grid[7],end=" | "),print(grid[8])
 	
 def empty_cells(_grid):
 	return [ cell for cell in _grid if type(cell) is int ]
