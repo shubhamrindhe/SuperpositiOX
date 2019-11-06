@@ -5,6 +5,7 @@ body,*{
 		overflow:hidden;
 		font-family:Courier New;
 	}
+body{height:100vh;}
 	table{
 		margin:0;
 		/*
