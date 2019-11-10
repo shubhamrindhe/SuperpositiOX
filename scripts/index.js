@@ -52,9 +52,9 @@ function create_svg(i){
 	var line = document.createElementNS('http://www.w3.org/2000/svg','line');
 	line.setAttribute("x1",win.x1*w);
 	line.setAttribute("y1",win.y1*w);
-	line.setAttribute("x2",win.x2*w);
-	line.setAttribute("y2",win.y2*w);
-	line.setAttribute("stroke","rgba(0,0,0,0.8)");
+	line.setAttribute("x2",win.x1*w);
+	line.setAttribute("y2",win.y1*w);
+	line.setAttribute("stroke","rgba(0,0,0,1)");
 	line.setAttribute("stroke-width",20);
 	line.setAttribute("stroke-linecap","round");
 	
@@ -146,8 +146,8 @@ function create_x(i){
 	var line1 = document.createElementNS('http://www.w3.org/2000/svg','line');
 	line1.setAttribute("x1",c.x*w-s);
 	line1.setAttribute("y1",c.y*w-s);
-	line1.setAttribute("x2",c.x*w+s);
-	line1.setAttribute("y2",c.y*w+s);
+	line1.setAttribute("x2",c.x*w-s);
+	line1.setAttribute("y2",c.y*w-s);
 	line1.setAttribute("stroke","blue");
 	line1.setAttribute("stroke-width",stroke_width);
 	line1.setAttribute("stroke-linecap","round");
@@ -175,8 +175,8 @@ function create_x(i){
 	var line2 = document.createElementNS('http://www.w3.org/2000/svg','line');
 	line2.setAttribute("x1",c.x*w-s);
 	line2.setAttribute("y1",c.y*w+s);
-	line2.setAttribute("x2",c.x*w+s);
-	line2.setAttribute("y2",c.y*w-s);
+	line2.setAttribute("x2",c.x*w-s);
+	line2.setAttribute("y2",c.y*w+s);
 	line2.setAttribute("stroke","blue");
 	line2.setAttribute("stroke-width",stroke_width);
 	line2.setAttribute("stroke-linecap","round");
