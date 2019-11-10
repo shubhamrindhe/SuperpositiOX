@@ -55,7 +55,7 @@ function create_svg(i){
 	line.setAttribute("x2",win.x1*w);
 	line.setAttribute("y2",win.y1*w);
 	line.setAttribute("stroke","rgba(0,0,0,1)");
-	line.setAttribute("stroke-width",20);
+	line.setAttribute("stroke-width",10);
 	line.setAttribute("stroke-linecap","round");
 	
 	var animate1 = document.createElementNS('http://www.w3.org/2000/svg','animate');
