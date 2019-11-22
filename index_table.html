@@ -6,6 +6,7 @@
 	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 	<meta name="author" content="shubhamrindhe" id="author"/>
 	<link rel="stylesheet" href="./stylesheets/HUD.css" type="text/css" />
+	<!--script src="./scripts/TicTacToe.js"></script-->
 	<script src="./scripts/minmax.js"></script>
 	<style>
 	</style>
@@ -14,9 +15,26 @@
 	<span id="result" class="not-active" style=""></span>
 	
 	<svg id="XO" class="centroid"></svg>
+	<table id="board" class="centroid" style="">
+		<tr>
+			<td id="0" class=""></td>
+			<td id="1" class="v"></td> 
+			<td id="2" class=""></td>
+		</tr>
+		<tr>
+			<td id="3" class="h"></td>
+			<td id="4" class="h v"></td>
+			<td id="5" class="h"></td>
+		</tr>
+		<tr>
+			<td id="6" class=""></td>
+			<td id="7" class="v"></td>
+			<td id="8" class=""></td>
+		</tr>
+	</table>
 	<svg id="winning_move" class="centroid" style="display:none;"></svg>
 	
 	<span id="start_btn" class="not-active" style="" onclick="restart()">Play Again</span>
 </body>
-<script src="./scripts/index_svg.js"></script>
+<script src="./scripts/index.js"></script>
 </html>
