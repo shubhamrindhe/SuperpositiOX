@@ -339,18 +339,36 @@ function handle(id){
 				
 				document.getElementById('loader').style.display = 'block';
 				
+				/*
 				var spot = best_spot();
 				mark(spot,'O');
-
 				document.getElementById('loader').style.display = 'none';
 				
 				end = check_win(grid,puter);
 				if(end == null){
-
 				}else{
 					endgame(end.player,end.index);
 					turn = false;
 				}
+				*/
+				
+				
+				best_spot().then(spot => {
+					mark(spot,'O');
+					document.getElementById('loader').style.display = 'none';
+				
+					end = check_win(grid,puter);
+					if(end == null){
+
+					}else{
+						endgame(end.player,end.index);
+						turn = false;
+					}
+				});
+				
+				
+
+				
 			}else{
 				endgame('-',null);
 			}
@@ -380,7 +398,12 @@ function mark(cell_id,player){
 }
 
 function best_spot(){
-	return minmax_random(grid,puter,{protagonist : puter , rival : hooman},0.3).index;
+	
+	return new Promise(resolve => {
+		resolve(minmax_random(grid,puter,{protagonist : puter , rival : hooman},0.3).index);
+	});
+	
+	//return minmax_random(grid,puter,{protagonist : puter , rival : hooman},0.3).index;
 }
 		
 function endgame(player,combo){
