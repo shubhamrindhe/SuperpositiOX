@@ -46,13 +46,46 @@ function index_array(n){
 	return Array.from(Array(n).keys());
 }
 
+function beginElements(list){
+	list.forEach(function(e,i,l){
+		e.beginElement();
+	});
+}
+function beginElementsById(list){
+	list.forEach(function(e,i,l){
+		document.getElementById(e).beginElement();
+	});
+}
+
+function create_line(x1,y1,x2,y2,color,lineWidth,animations){
+	animations_list = [];
+	
+	var line = document.createElementNS('http://www.w3.org/2000/svg','line');
+	line.setAttribute("x1",x1);
+	line.setAttribute("y1",y1);
+	line.setAttribute("x2",x2);
+	line.setAttribute("y2",y2);
+	line.setAttribute("stroke",color);
+	line.setAttribute("stroke-width",lineWidth);
+	line.setAttribute("stroke-linecap","round");
+	
+	animations.forEach(function(e,i,l){
+		var animation = document.createElementNS('http://www.w3.org/2000/svg','animate');
+		for(anim_attr in e){
+			animation.setAttribute(anim_attr,e[anim_attr]);
+		}
+		line.appendChild(animation);
+		animations_list.push(animation);
+	});
+	
+	return {line,animations_list};
+}
+
 function init_grid(){
 	
 	var rect = Tic_Tac_Toe.getBoundingClientRect();
-	
 	var W = rect.width;
 	var w = W/dim;
-	
 	var l=4;
 	var color = 'black'
 	var _ = 4;
@@ -68,6 +101,7 @@ function init_grid(){
 	
 	var anim_list = [];
 	
+	/*
 	//<line x1="'+(0+_)+'" y1="'+w+'" x2="'+(W-2)+'" y2="'+w+'" style="stroke:'+color+';stroke-width:'+l+'" stroke-linecap="round"/>
 	var line_h_1 = document.createElementNS('http://www.w3.org/2000/svg','line');
 	line_h_1.setAttribute("x1",W/2);
@@ -101,8 +135,6 @@ function init_grid(){
 	anim_list.push(animate_h_1_2);
 	
 	document.getElementById('XO').appendChild( line_h_1 );
-	
-	
 	
 	
 	//<line x1="'+(0+_)+'" y1="'+2*w+'" x2="'+(W-2)+'" y2="'+2*w+'" style="stroke:'+color+';stroke-width:'+l+'" stroke-linecap="round"/>
@@ -141,7 +173,6 @@ function init_grid(){
 	document.getElementById('XO').appendChild( line_h_2 );
 	
 	
-	
 	//<line x1="'+w+'" y1="'+(0+_)+'" x2="'+w+'" y2="'+(W-_)+'" style="stroke:'+color+';stroke-width:'+l+'" stroke-linecap="round"/>
 	var line_v_1 = document.createElementNS('http://www.w3.org/2000/svg','line');
 	line_v_1.setAttribute("x1",w);
@@ -176,6 +207,7 @@ function init_grid(){
 	
 	document.getElementById('XO').appendChild( line_v_1 );
 	
+	
 	//<line x1="'+2*w+'" y1="'+(0+_)+'" x2="'+2*w+'" y2="'+(W-_)+'" style="stroke:'+color+';stroke-width:'+l+'" stroke-linecap="round"/>
 	var line_v_2 = document.createElementNS('http://www.w3.org/2000/svg','line');
 	line_v_2.setAttribute("x1",2*w);
@@ -209,17 +241,110 @@ function init_grid(){
 	anim_list.push(animate_v_2_2);
 	
 	document.getElementById('XO').appendChild( line_v_2 );
+	*/
+	
+	
+	
+	
+	var line_h1_opt = create_line(W/2,w,W/2,w,color,l,[
+		{
+			attributeName : "x1",
+			from : W/2,
+			to : 0+_,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		},{
+			attributeName : "x2",
+			from : W/2,
+			to : W-_,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		}
+	]);
+	document.getElementById('XO').appendChild( line_h1_opt.line );
+	
+	anim_list = anim_list.concat(line_h1_opt.animations_list);
+	
+	
+	var line_h2_opt = create_line(W/2,2*w,W/2,2*w,color,l,[
+		{
+			attributeName : "x1",
+			from : W/2,
+			to : 0+_,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		},{
+			attributeName : "x2",
+			from : W/2,
+			to : W-_,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		}
+	]);
+	document.getElementById('XO').appendChild( line_h2_opt.line );
+	
+	anim_list = anim_list.concat(line_h2_opt.animations_list);
+	
+	var line_v1_opt = create_line(w,W/2,w,W/2,color,l,[
+		{
+			attributeName : "y1",
+			from : W/2,
+			to : 0+_,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		},{
+			attributeName : "y2",
+			from : W/2,
+			to : W-_,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		}
+	]);
+	
+	document.getElementById('XO').appendChild( line_v1_opt.line );
+	
+	anim_list = anim_list.concat(line_v1_opt.animations_list);
+	
+	var line_v2_opt = create_line(2*w,W/2,2*w,W/2,color,l,[
+		{
+			attributeName : "y1",
+			from : W/2,
+			to : 0+_,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		},{
+			attributeName : "y2",
+			from : W/2,
+			to : W-_,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		}
+	]);
+	
+	document.getElementById('XO').appendChild( line_v2_opt.line );
+	
+	anim_list = anim_list.concat(line_v2_opt.animations_list);
 	
 	
 	beginElements(anim_list);
-	
 }
+
+
 
 	
 function create_svg(i){
 	var win = winning_combos_cords[i];
 	var w = document.getElementById('winning_move').getBoundingClientRect().width;
-
+	
+	/*
 	var line = document.createElementNS('http://www.w3.org/2000/svg','line');
 	line.setAttribute("x1",win.x1*w);
 	line.setAttribute("y1",win.y1*w);
@@ -247,31 +372,28 @@ function create_svg(i){
 	
 	line.appendChild(animate1);
 	line.appendChild(animate2);
-	
-	return {line:line,animate_tags:[animate1,animate2]};
-	
-	/*
-	return '<line x1="'+(win.x1*w)+'" y1="'+(win.y1*w)+'" x2="'+(win.x2*w)+'" y2="'+(win.y2*w)+'" style="stroke:rgba(0,0,0,0.8);stroke-width:20" stroke-linecap="round">\
-		<animate \
-			xlink:href="#line-0-1"\
-			attributeName="x2" \
-			from="20"\
-			to="60" \
-			dur="0.1s"\
-			begin="0s"\
-			fill="freeze"\ 
-			id="line-0-1"/>\
-		<animate \
-			xlink:href="#line-0-1"\
-			attributeName="y2" \
-			from="20"\
-			to="60" \
-			dur="0.1s"\
-			begin="0s"\
-			fill="freeze"\ 
-			id="line-0-1"/>\
-	</line>';
 	*/
+	
+	var line = create_line( win.x1*w , win.y1*w , win.x1*w , win.y1*w , "rgba(0,0,0,1)" ,10,[
+		{
+			attributeName : "x2",
+			from : win.x1*w,
+			to : win.x2*w,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		},{
+			attributeName : "y2",
+			from : win.y1*w,
+			to : win.y2*w,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		}
+	]);
+	
+	return {line:line.line,animate_tags:line.animations_list};
+
 }
 
 function create_o(i){
@@ -313,12 +435,13 @@ function create_x(i){
 	var c = grid_center_cords[i];
 	var w = document.getElementById('XO').getBoundingClientRect().width;
 	var s = w/(2*size);
-	
+	var anim_list = [];
+	/*
 	var line1 = document.createElementNS('http://www.w3.org/2000/svg','line');
 	line1.setAttribute("x1",c.x*w-s);
 	line1.setAttribute("y1",c.y*w-s);
 	line1.setAttribute("x2",c.x*w-s);
-	line1.setAttribute("y2",c.y*w-s);
+	line1.setAttribute("y2",c.x*w-s);
 	line1.setAttribute("stroke","red");
 	line1.setAttribute("stroke-width",stroke_width);
 	line1.setAttribute("stroke-linecap","round");
@@ -339,9 +462,8 @@ function create_x(i){
 	animate2.setAttribute("begin","0s");
 	animate2.setAttribute("fill","freeze");
 	
-	line1.appendChild(animate1)
-	line1.appendChild(animate2)
-	
+	line1.appendChild(animate1);
+	line1.appendChild(animate2);
 	
 	var line2 = document.createElementNS('http://www.w3.org/2000/svg','line');
 	line2.setAttribute("x1",c.x*w-s);
@@ -368,26 +490,60 @@ function create_x(i){
 	animate4.setAttribute("begin","0s");
 	animate4.setAttribute("fill","freeze");
 	
-	line2.appendChild(animate3)
-	line2.appendChild(animate4)
+	line2.appendChild(animate3);
+	line2.appendChild(animate4);
+	
 	
 	return {line1:line1,line2:line2,animate_tags:[animate1,animate2,animate3,animate4]};
-	/*
-	return '\
-		<line x1="'+(c.x*w-s)+'" y1="'+(c.y*w-s)+'" x2="'+(c.x*w+s)+'" y2="'+(c.y*w+s)+'" style="stroke:blue;stroke-width:'+stroke_width+'" stroke-linecap="round">\
-		</line>\
-		<line x1="'+(c.x*w-s)+'" y1="'+(c.y*w+s)+'" x2="'+(c.x*w+s)+'" y2="'+(c.y*w-s)+'" style="stroke:blue;stroke-width:'+stroke_width+'" stroke-linecap="round">\
-		</line>\
-	';
 	*/
 	
+	
+	var line1 = create_line( c.x*w-s , c.y*w-s , c.x*w-s , c.x*w-s , "red" , stroke_width ,[
+		{
+			attributeName : "x2",
+			from : c.x*w-s,
+			to : c.x*w+s,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		},{
+			attributeName : "y2",
+			from : c.y*w-s,
+			to : c.y*w+s,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		}
+	]);
+	
+	
+	anim_list = anim_list.concat(line1.animations_list);
+	
+	var line2 = create_line( c.x*w-s , c.y*w+s , c.x*w-s , c.y*w+s , "red" , stroke_width ,[
+		{
+			attributeName : "x2",
+			from : c.x*w-s,
+			to : c.x*w+s,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		},{
+			attributeName : "y2",
+			from : c.y*w+s,
+			to : c.y*w-s,
+			dur : "0.3s",
+			begin : "0s",
+			fill : "freeze"
+		}
+	]);
+	
+	anim_list = anim_list.concat(line2.animations_list);
+	
+	return {line1:line1.line,line2:line2.line,animate_tags:anim_list};
+	
 }	
 	
-function beginElements(list){
-	list.forEach(function(e,i,l){
-		e.beginElement();
-	});
-}	
+	
 
 	
 window.onload = function(){
