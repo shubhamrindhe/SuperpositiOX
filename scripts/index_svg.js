@@ -498,7 +498,7 @@ function create_x(i){
 	*/
 	
 	
-	var line1 = create_line( c.x*w-s , c.y*w-s , c.x*w-s , c.x*w-s , "red" , stroke_width ,[
+	var line1 = create_line( c.x*w-s , c.y*w-s , c.x*w-s , c.y*w-s , "red" , stroke_width ,[
 		{
 			attributeName : "x2",
 			from : c.x*w-s,
