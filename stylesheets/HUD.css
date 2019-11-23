@@ -2,11 +2,12 @@ body,*{
 	background:none;
 	margin:0;
 	padding:0;
-	overflow:hidden;
+	/*overflow:hidden;*/
 	font-family:Courier New;
 }
 body{
 	/*height:100vh;*/
+	overflow:hidden;
 }
 table{
 	margin:0;
@@ -234,4 +235,63 @@ td > svg:not (:root ) {
 	100%{
 		box-shadow : 0 0 0 0 rgba(255,109,74,0);
 	}
+}
+
+
+.active{
+	display:block;
+}
+.dactive{
+	display:none;
+}
+
+
+.loader{
+    position:absolute ;
+    left:50%;
+    bottom:10%;
+}
+.loader:before{
+    content:'';
+    position:absolute ;
+    width:25px;
+    height:25px;
+    
+    border-radius:50%;
+    border: 2px solid rgba(255,255,255,0);
+    border-top-color:black;
+    border-bottom-color:black;
+    
+    animation : RotateAClk 1s infinite linear;
+}
+.loader:after{
+    content:'';
+    position:absolute ;
+    width:15px;
+    height:15px;
+    
+    border-radius:50%;
+    border: 2px solid rgba(255,255,255,0);
+    border-top-color:black;
+    border-bottom-color:black;
+    
+    animation : RotateClk .5s infinite linear;
+}
+
+@keyframes RotateClk{
+    0%{
+        transform:translate(-50%,-50%) rotate(0deg);
+    }
+    100%{
+        transform:translate(-50%,-50%) rotate(360deg);
+    }
+}
+@keyframes RotateAClk{
+    0%{
+        transform:translate(-50%,-50%) rotate(0deg);
+    }
+    100%{
+        transform:translate(-50%,-50%) rotate(-360deg);
+    }
+    
 }

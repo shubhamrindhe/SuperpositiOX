@@ -336,8 +336,14 @@ function handle(id){
 		var end = check_win(grid,hooman);
 		if(end == null){
 			if(!check_tie(grid)){
+				
+				document.getElementById('loader').style.display = 'block';
+				
 				var spot = best_spot();
-				mark(spot,'O');			
+				mark(spot,'O');
+
+				document.getElementById('loader').style.display = 'none';
+				
 				end = check_win(grid,puter);
 				if(end == null){
 
