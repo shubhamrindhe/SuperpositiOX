@@ -15,7 +15,7 @@ table{
 	width:300px;
 	height:300px;
 	*/
-	border-collapse:collapse;	
+	border-collapse:collapse;
 }
 tr{
 	margin:0;
@@ -29,7 +29,7 @@ td{
 	align-items:center;
 	text-align:center;
 	cursor:pointer;
-}		
+}
 /*
 td:hover{
 	-moz-box-shadow:    inset 0 0 10px #000000;
@@ -83,10 +83,10 @@ td > svg:not (:root ) {
 	position:absolute;
 	left:50%;
 	top:50%;
-	transform:translate(-50%,-50%);	
+	transform:translate(-50%,-50%);
 }
 .centroid2{
-	position:relative;
+	position:fixed;
 	left:50%;
 	top:50%;
 	transform:translate(-50%,-50%);
@@ -134,7 +134,7 @@ td > svg:not (:root ) {
 		margin-right:-50%;
 		transform:translate(-50%,-50%);
 		*/
-	}	
+	}
 	td > svg:not (:root ) {
 		width:100%;
 		height: auto;
@@ -142,7 +142,7 @@ td > svg:not (:root ) {
 }
 @keyframes zoom-in{
 	0%{
-		opacity :0; 
+		opacity :0;
 		transform:scale(0,0);
 	}
 	100%{
@@ -155,7 +155,7 @@ td > svg:not (:root ) {
 
 	width:auto;
 	height:auto;
-	
+
 	color:#fff;
 	display:flex-box;
 	justify-content:center;
@@ -179,19 +179,15 @@ td > svg:not (:root ) {
 	transition:0.3s;
 }
 #start_btn.not-active{
-	bottom:-50%;
-	left:50%;
-	transform:translate(-50%,0);
-
-	transition:0.3s;
-
+	opacity: 0;
+	display: none;
 }
 #result{
 	position:absolute;
 
 	width:auto;
 	height:auto;
-		
+
 	color:#fff;
 	display:flex-box;
 	justify-content:center;
@@ -199,11 +195,11 @@ td > svg:not (:root ) {
 	text-align:center;
 
 	padding:10px;
-			
+
 	font-size:medium;
 	font-weight:900;
 	border-radius:10px;
-			
+
 	background:rgba(0,0,0,0.8);
 }
 #result.active{
@@ -256,12 +252,12 @@ td > svg:not (:root ) {
     position:absolute ;
     width:25px;
     height:25px;
-    
+
     border-radius:50%;
     border: 2px solid rgba(255,255,255,0);
     border-top-color:black;
     border-bottom-color:black;
-    
+
     animation : RotateAClk 1s infinite linear;
 }
 .loader:after{
@@ -269,12 +265,12 @@ td > svg:not (:root ) {
     position:absolute ;
     width:15px;
     height:15px;
-    
+
     border-radius:50%;
     border: 2px solid rgba(255,255,255,0);
     border-top-color:black;
     border-bottom-color:black;
-    
+
     animation : RotateClk .5s infinite linear;
 }
 
@@ -293,5 +289,5 @@ td > svg:not (:root ) {
     100%{
         transform:translate(-50%,-50%) rotate(-360deg);
     }
-    
+
 }
