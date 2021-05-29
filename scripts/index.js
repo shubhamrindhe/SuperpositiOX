@@ -210,12 +210,14 @@ function create_o(i) {
 	var w = document.getElementById('XO').getBoundingClientRect().width;
 
 	var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+	let r = w / (1.5 * size);
 	circle.setAttribute("cx", c.x * w);
 	circle.setAttribute("cy", c.y * w);
-	circle.setAttribute("r", w / (1.5 * size));
+	circle.setAttribute("r", r);
 	circle.setAttribute("stroke", "blue");
 	circle.setAttribute("fill", "rgba(255,255,255,0)");
 	circle.setAttribute("stroke-width", stroke_width);
+	circle.setAttribute("stroke-linecap", "round");
 
 	/*
 	var animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
@@ -226,7 +228,12 @@ function create_o(i) {
 	animate.setAttribute("begin", "0s");
 	animate.setAttribute("fill", "freeze");
 	*/
-	let l = circle.getTotalLength();
+	let l;
+	try {
+		l = circle.getTotalLength();
+	} catch (err) {
+		l =  Math.ceil(2 * Math.PI * r);
+	}
 	circle.setAttribute("stroke-dasharray", l);
 
 	var animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
