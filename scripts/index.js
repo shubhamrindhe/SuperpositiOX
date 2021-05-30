@@ -10,8 +10,9 @@ var O = '<svg width="80" height="80" class="">\
 		<circle cx="40" cy="40" r="25" stroke="red" fill="none" stroke-width="5" />\
 		</svg>';
 
-var hooman = 'X';
-var puter = 'O';
+const hooman = 'X';
+const puter = 'O';
+var current_player = null;
 
 var dim = 3;
 
@@ -232,7 +233,7 @@ function create_o(i) {
 	try {
 		l = circle.getTotalLength();
 	} catch (err) {
-		l =  Math.ceil(2 * Math.PI * r);
+		l = Math.ceil(2 * Math.PI * r);
 	}
 	circle.setAttribute("stroke-dasharray", l);
 
@@ -309,6 +310,7 @@ function init() {
 	Tic_Tac_Toe = document.getElementById('XO')
 	grid = index_array(9);
 	turn = true;
+	current_player = hooman;
 
 	init_grid();
 }
@@ -319,6 +321,7 @@ function reset() {
 	Tic_Tac_Toe.innerHTML = '';
 	grid = index_array(9);
 	turn = true;
+	current_player = hooman;
 
 	init_grid();
 }
@@ -334,6 +337,10 @@ function addListeners() {
 }
 
 function handle_svg(e, DOM) {
+	if (document.querySelector("#controls").style.display != 'none') {
+		document.querySelector("#controls").style.display = 'none';
+	}
+
 	var rect = DOM.getBoundingClientRect();
 	var i = Math.floor((e.x - rect.left) / (rect.width / dim));
 	var j = Math.floor((e.y - rect.top) / (rect.height / dim));
@@ -348,7 +355,7 @@ function handle_table(e, DOM) {
 }
 
 function handle(id) {
-	if (turn && (typeof grid[id] != 'string') /*DOM.innerHTML==''*/) {
+	if (turn && (typeof grid[id] != 'string' && document.querySelector("input[name=player-2]:checked").id == 'computer')) {
 		turn = false;
 		mark(id, hooman);
 
@@ -386,18 +393,29 @@ function handle(id) {
 						}
 					}, 5)
 				});
-
-
-
-
 			} else {
-				endgame('-', null);
+				endgame(null, null);
 			}
 			turn = true;
 		} else {
 			endgame(end.player, end.index);
 			turn = false;
 		}
+	} else if (turn) {
+		turn = false;
+		mark(id, current_player);
+		var end = check_win(grid, current_player);
+		if (end == null) {
+			if (!check_tie(grid)) {
+			} else {
+				endgame(null, null);
+			}
+			turn = true;
+		} else {
+			endgame(end.player, end.index);
+			turn = false;
+		}
+		current_player = current_player == hooman ? puter : hooman;
 	}
 }
 
@@ -428,12 +446,20 @@ function best_spot() {
 }
 
 function endgame(player, combo) {
-	if (player == puter) {
-		document.getElementById('result').innerHTML = 'You Lost!';
-	} else if (player == hooman) {
-		document.getElementById('result').innerHTML = 'You Won!';
+	if (document.querySelector("input[name=player-2]:checked").id == 'computer') {
+		if (player == puter) {
+			document.getElementById('result').innerHTML = 'You Lost!';
+		} else if (player == hooman) {
+			document.getElementById('result').innerHTML = 'You Won!';
+		} else {
+			document.getElementById('result').innerHTML = 'Its a Tie!';
+		}
 	} else {
-		document.getElementById('result').innerHTML = 'Its a Tie!';
+		if (player) {
+			document.getElementById('result').innerHTML = player+' Won!';
+		} else {
+			document.getElementById('result').innerHTML = 'Its a Tie!';
+		}
 	}
 
 
@@ -460,6 +486,7 @@ function restart() {
 	document.getElementById('winning_move').style.display = 'none';
 	document.getElementById('winning_move').innerHTML = '';
 	document.getElementById('XO').innerHTML = '';
+	document.querySelector("#controls").style.display = 'flex';
 	reset();
 }
 
