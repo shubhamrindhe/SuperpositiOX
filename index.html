@@ -8,16 +8,115 @@
 	<link rel="stylesheet" href="./stylesheets/HUD.css" type="text/css" />
 	<script src="./scripts/minmax.js"></script>
 	<style>
+
+		#controls {
+			/*
+			position: absolute;
+			bottom: 15px;
+			left: 50%;
+			transition: translate(-50%, 0);
+			*/
+
+			display:flex;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+		}
+
+		input[type="checkbox"].toggle{display : none;transition-duration:0.1s;}
+		input[type="checkbox"].toggle:not(:checked){}
+		input[type="checkbox"].toggle(:checked){}
+
+		.toggle-label:after {
+			width: auto;
+			height: auto;
+		}
+
+		input[type="checkbox"]:checked + .toggle-label:after {
+			font-family:Courier New;
+			display:flex;
+			content:var(--c-checked-b, '^');
+		}
+
+		input[type="checkbox"].toggle:not(:checked) + .toggle-label + .toggle-block {
+			display : none;
+		}
+
+		input[type="checkbox"].toggle:checked + .toggle-label + .toggle-block {
+			display : block;
+		}
+
+		input[type="checkbox"].toggle:not(:checked) + .toggle-label:after {
+			font-family:Courier New;
+			display:flex;
+			content:var(--c-not-checked-b," {...} ");
+			padding: 2px;
+		}
+
+		.toggle-label {
+			display:inline-block;
+			color:#000;
+			background:rgba(0,0,0,0.6);
+			border-radius:5px;
+			color: white;
+			padding: 2px;
+		}
+
+		input[type="radio"]:checked + .r-l {
+			/*color: var(--color);*/
+			text-decoration: underline;
+			font-weight: bold;
+			background: blueviolet;
+		}
+
+		input[type="radio"]:checked + .r-l::after {
+			content: '';
+			/*color: var(--color);*/
+			text-decoration: none;
+		}
+
+		input[type="radio"]:not(:checked) + .r-l {
+			color: gray;
+			/*text-decoration: line-through;*/
+		}
+
+		.r-l {
+			font-family: 'Courier New', Courier, monospace;
+			font-weight: bold;
+			font-size: 15px;
+		}
+
+		input[type="radio"]:checked + .r-l + #player-img {
+			content: 'human';
+		}
+
 	</style>
 </head>
 <body>
+
+	<div id="controls">
+		<center>
+		<input type="checkbox" id="add_point" class="toggle" unchecked value="uncheked"/>
+		<label for="add_point" class="toggle-label" style="--c-not-checked-b: '⚙'"></label>
+		<div class="toggle-block">
+			<span style="font-size: 12px;font-weight: 900;">Select Player 2<span><br>
+			<span>
+			<input type="radio" id="human" name="player-2" style="display: none;"/>
+			<label for="human" class="r-l" style="padding: 5px;--color:red;" data-color=" red ">👨</label>
+			<input type="radio" id="computer" name="player-2" style="display: none;" checked/>
+			<label for="computer" class="r-l" style="padding: 5px;--color:green;" data-color="green">🤖</label>
+			<span>
+		</div>
+		</center>
+	</div>
+
 	<span id="result" class="not-active" style=""></span>
-	
+
 	<svg id="XO" class="centroid"></svg>
 	<svg id="winning_move" class="centroid" style="display:none;"></svg>
-	
+
 	<span id="start_btn" class="not-active" style="" onclick="restart()">Play Again</span>
-	
+
 	<div id="loader" class="loader" style="display:none;"></div>
 </body>
 <script src="./scripts/index.js"></script>
