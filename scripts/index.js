@@ -346,6 +346,10 @@ function handle_svg(e, DOM) {
 	var j = Math.floor((e.y - rect.top) / (rect.height / dim));
 	var id = i + dim * j;
 
+	if (typeof grid[id] == 'string') {
+		return;
+	}
+
 	handle(id);
 }
 
@@ -355,7 +359,7 @@ function handle_table(e, DOM) {
 }
 
 function handle(id) {
-	if (turn && (typeof grid[id] != 'string' && document.querySelector("input[name=player-2]:checked").id == 'computer')) {
+	if (turn && document.querySelector("input[name=player-2]:checked").id == 'computer') {
 		turn = false;
 		mark(id, hooman);
 
@@ -391,12 +395,12 @@ function handle(id) {
 							endgame(end.player, end.index);
 							turn = false;
 						}
+						turn = true;
 					}, 5)
 				});
 			} else {
 				endgame(null, null);
 			}
-			turn = true;
 		} else {
 			endgame(end.player, end.index);
 			turn = false;
